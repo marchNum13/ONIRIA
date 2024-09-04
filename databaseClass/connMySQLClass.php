@@ -4,7 +4,7 @@ class connMySQLClass{
     private $servername = "localhost"; // SERVER NAME
     private $username = "root"; // USERNAME
     private $password = ""; // PASSWORD
-    private $dbname = "ads"; // DATABASE NAME
+    private $dbname = "oni"; // DATABASE NAME
 
     // private $username = "u351876156_idetaid_"; // USERNAME
     // private $password = "/XW9yUR>8Pt#"; // PASSWORD
