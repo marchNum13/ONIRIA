@@ -8,7 +8,7 @@ include "config/settingConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Setting</title>
+    <title>Oniria - Setting</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -86,6 +86,13 @@ include "config/settingConfig.php"
                         </div>
                     </a>
                 </li>
+                <li>
+                    <a href="edit-rewards" class="item">
+                        <div class="in">
+                            <div>Edit Rewards</div>
+                        </div>
+                    </a>
+                </li>
                 <!-- <li>
                     <a href="#" class="item">
                         <div class="in">
@@ -125,7 +132,7 @@ include "config/settingConfig.php"
             <li>
                 <a href="#" class="item" data-bs-toggle="modal" data-bs-target="#bank-akun">
                     <div class="in">
-                        <div>Bank Akun</div>
+                        <div>Wallet Address</div>
                         <span class="text-secondary" style="font-size: smaller;"> 
                             <?= $previewBank ?>
                         </span>
@@ -246,41 +253,20 @@ include "config/settingConfig.php"
             </div>
         </div>
         <!-- * Username Action Sheet -->
-        <!-- Username Action Sheet -->
+        <!-- bank Action Sheet -->
         <div class="modal fade action-sheet" id="bank-akun" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Bank Akun</h5>
+                        <h5 class="modal-title">Wallet</h5>
                     </div>
                     <div class="modal-body">
                         <div class="action-sheet-content">
                             <form method="post" action="">
-
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="namaBank">Nama Bank</label>
-                                        <input type="text" class="form-control" id="namaBank" name="namaBank" placeholder="Ex: BCA" autocomplete="off" value="<?= $namaBank ?>">
-                                        <i class="clear-input">
-                                            <ion-icon name="close-circle"></ion-icon>
-                                        </i>
-                                    </div>
-                                </div>
-
-                                <div class="form-group basic">
-                                    <div class="input-wrapper">
-                                        <label class="label" for="namaAkunBank">Nama Akun Bank</label>
-                                        <input type="text" class="form-control" id="namaAkunBank" name="namaAkunBank" placeholder="Enter Account Bank Name" autocomplete="off" value="<?= $namaAkunBank ?>">
-                                        <i class="clear-input">
-                                            <ion-icon name="close-circle"></ion-icon>
-                                        </i>
-                                    </div>
-                                </div>
-
-                                <div class="form-group basic">
-                                    <div class="input-wrapper">
-                                        <label class="label" for="noBank">No. Rekening</label>
-                                        <input type="number" class="form-control" id="noBank" name="noBank" placeholder="Enter Bank Number" autocomplete="off" value="<?= $noBank ?>">
+                                        <label class="label" for="noBank">Wallet Address</label>
+                                        <input type="text" class="form-control" id="noBank" name="noBank" placeholder="Enter Wallet Address" autocomplete="off" value="<?= $noBank ?>">
                                         <i class="clear-input">
                                             <ion-icon name="close-circle"></ion-icon>
                                         </i>
@@ -313,7 +299,7 @@ include "config/settingConfig.php"
                 </div>
             </div>
         </div>
-        <!-- * Username Action Sheet -->
+        <!-- * bank Action Sheet -->
         <!-- Username Action Sheet -->
         <div class="modal fade action-sheet" id="change-password" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

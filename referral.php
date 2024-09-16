@@ -8,7 +8,7 @@ include "config/refferalConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Referral</title>
+    <title>Oniria - Referral</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">

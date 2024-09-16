@@ -15,14 +15,15 @@ class paketTableClass extends connMySQLClass{
                 paket_id VARCHAR(14) NOT NULL UNIQUE,
                 paket_user_id VARCHAR(7) NOT NULL,
                 paket_nominal DOUBLE NOT NULL,
-                paket_nominal_cuan DOUBLE NOT NULL DEFAULT '0',
                 paket_estimasi ENUM('Trial','Berbayar') NOT NULL,
                 paket_name VARCHAR(250) NOT NULL,
-                paket_reward_tugas DOUBLE NOT NULL,
+                paket_reward_tugas_satu DOUBLE NOT NULL,
+                paket_reward_tugas_dua DOUBLE NOT NULL,
+                paket_reward_tugas_tiga DOUBLE NOT NULL,
                 paket_jumlah_tugas DOUBLE NOT NULL,
                 paket_ads_stop_date TEXT NOT NULL,
-                paket_date_capitalback TEXT NOT NULL DEFAULT '0',
-                paket_date TEXT NOT NULL,
+                paket_ads_limit DOUBLE NOT NULL,
+                paket_date TEXT NOT NULL
             )";
             // EXECUTE THE QUERY TO CREATE TABLE
             $this->dbConn()->query($sql);

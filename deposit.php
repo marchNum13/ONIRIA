@@ -9,7 +9,7 @@ include "config/depositConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Deposit</title>
+    <title>Oniria - Deposit</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -73,7 +73,7 @@ include "config/depositConfig.php"
                             <tr>
                                 <th><?= $row['date'] ?></th>
                                 <td><?= memberName($row['deposit_user_id']) ?></td>
-                                <td>Rp<?= number_format($row['deposit_nominal']) ?></td>
+                                <td><?= number_format($row['deposit_nominal']) ?> USDT</td>
                                 <td><span class="text-<?= $row['deposit_status'] == "Pending" ? "warning" : ($row['deposit_status'] == "Success" ? "success" : "danger") ?>"><?= $row['deposit_status'] ?></span></td>
                                 <td class="text-end">
                                     <a href="#depoActionSheet<?= $row['deposit_id'] ?>" data-bs-toggle="modal">
@@ -206,20 +206,20 @@ include "config/depositConfig.php"
                             <div class="action-sheet-content">
                                 <form method="post" action="">
                                     <div class="form-group basic">
-                                        <label class="label" for="mount">Bank Admin</label>
-                                        <h4><?= $row['deposit_bank_admin'] ?></h4>
+                                        <label class="label" for="mount">Admin Wallet Address</label>
+                                        <span style="font-size: smaller;"><?= $row['deposit_bank_admin'] ?></span>
                                     </div>
                                     <div class="form-group basic">
-                                        <label class="label" for="mount">Bank Member</label>
-                                        <h4><?= $row['deposit_bank_user'] ?></h4>
+                                        <label class="label" for="mount">Member Wallet Address</label>
+                                        <span style="font-size: smaller;"><?= $row['deposit_bank_user'] ?></span>
                                     </div>
                                     <div class="form-group basic">
-                                        <label class="label" for="mount">Bukti Transfer</label>
-                                        <img src="<?= $row['deposit_bukti'] ?>" alt="" width="100%">
+                                        <label class="label" for="mount">Transaction Number</label>
+                                        <h4><?= $row['deposit_bukti'] ?></h4>
                                     </div>
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Amount</label>
-                                        <h4>Rp<?= number_format($row['deposit_nominal']) ?></h4>
+                                        <h4><?= number_format($row['deposit_nominal']) ?> USDT</h4>
                                     </div>
                                     <script>
                                         function loadingForm() {

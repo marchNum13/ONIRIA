@@ -9,7 +9,7 @@ include "config/withdrawConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Withdraw</title>
+    <title>Oniria - Withdraw</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -73,7 +73,7 @@ include "config/withdrawConfig.php"
                             <tr>
                                 <th><?= $row['date'] ?></th>
                                 <td><?= memberName($row['withdraw_user_id']) ?></td>
-                                <td>Rp<?= number_format($row['withdraw_nominal']) ?></td>
+                                <td><?= number_format($row['withdraw_nominal']) ?> USDT</td>
                                 <td><span class="text-<?= $row['withdraw_status'] == "Pending" ? "warning" : ($row['withdraw_status'] == "Success" ? "success" : "danger") ?>"><?= $row['withdraw_status'] ?></span></td>
                                 <td class="text-end">
                                     <a href="#withdrawActionSheet<?= $row['withdraw_id'] ?>" data-bs-toggle="modal">
@@ -206,19 +206,19 @@ include "config/withdrawConfig.php"
                                 <form method="post" action="">
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Bank Tujuan</label>
-                                        <h4><?= $row['withdraw_bank_user'] ?></h4>
+                                        <h6><?= $row['withdraw_bank_user'] ?></h6>
                                     </div>
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Amount</label>
-                                        <h4>Rp<?= number_format($row['withdraw_nominal']) ?></h4>
+                                        <h4><?= number_format($row['withdraw_nominal']) ?> USDT</h4>
                                     </div>
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Fee Admin</label>
-                                        <h4><?= number_format(($row['withdraw_fee_admin']*100),2) ?>%</h4>
+                                        <h4><?= number_format($row['withdraw_fee_admin'],2) ?> USDT</h4>
                                     </div>
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Total Payout</label>
-                                        <h4>Rp<?= number_format(($row['withdraw_nominal'] - ($row['withdraw_nominal']*$row['withdraw_fee_admin']))) ?></h4>
+                                        <h4><?= number_format(($row['withdraw_nominal'] - $row['withdraw_fee_admin'])) ?> USDT</h4>
                                     </div>
                                     <script>
                                         function loadingForm() {

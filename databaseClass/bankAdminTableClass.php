@@ -12,9 +12,9 @@ class bankAdminTableClass extends connMySQLClass{
             // SET QUERY
             $sql = "CREATE TABLE $this->table_name (
                 id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                bank_admin_account_name VARCHAR(250) NOT NULL,
-                bank_admin_name VARCHAR(250) NOT NULL,
-                bank_admin_number VARCHAR(250) NOT NULL
+                bank_admin_account_name VARCHAR(250) NOT NULL DEFAULT 'empty',
+                bank_admin_name VARCHAR(250) NOT NULL DEFAULT 'empty',
+                bank_admin_number TEXT NOT NULL
             )";
             // EXECUTE THE QUERY TO CREATE TABLE
             $this->dbConn()->query($sql);

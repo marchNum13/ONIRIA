@@ -8,7 +8,7 @@ include "config/paketConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Paket</title>
+    <title>Oniria - Paket</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -49,32 +49,84 @@ include "config/paketConfig.php"
     <div id="appCapsule">
         <?php  
             $checkPaketBerbayar = checkPaketBerbayar();
-            if($checkPaketBerbayar){
+            $paketBasicUserIsActive = paketBasicUserIsActive();
+            
+            if(!$paketBasicUserIsActive){
+                foreach($dataPaket as $row){
+                    if($row['settings_nama_paket'] != "Membership"){
+                        continue;
+                    }
+        ?>
+            <!-- * Stats -->
+            <div class="section mt-3">
+                <div class="card card-with-icon">
+                    <div class="card-body pt-3 pb-3 text-center">
+                        <div class="card-icon bg-danger mb-2">
+                            <ion-icon name="trash-bin-outline"></ion-icon>
+                        </div>
+                        <h3 class="card-titlde mb-1">Anda tidak terdaftar dalam Membership atau masa Membership anda telah berakhir</h3>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#membership<?= $row['id'] ?>" class="btn btn-danger">
+                            Subscribe
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade action-sheet" id="membership<?= $row['id'] ?>" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><?= $row['settings_nama_paket'] ?></h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="action-sheet-content">
+                                <form method="post" action="">
+                                    <input type="hidden" name="namePaket" value="<?= $row['settings_nama_paket'] ?>">                                
+                                    <h3><?= number_format($row['settings_harga_paket']) ?> USDT / 30 Hari</h3>
+                                    Bebas langganan paket premium <br>
+                                    <?= $row['settings_jumlah_tugas'] ?> Video Youtube
+                                    <script>
+                                        function loadingForm() {
+                                            // Mengatur tombol menjadi tidak dapat di-klik selama proses loading
+                                            document.getElementById("loader").style.display  = "";
+                                        }
+                                    </script>
+                                    <div class="form-group basic">
+                                        <button type="submit" name="buyPaket" onclick="loadingForm()" class="btn btn-success btn-block btn-lg"
+                                            data-bs-dismiss="modal">Subscribe</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php
+                }
+            }elseif($checkPaketBerbayar){
         ?>
             <?php 
                 foreach($dataPaket as $row){
-                    if(!$checkTrial && $row['settings_nama_paket'] == "Magang"){
+                    if($row['settings_nama_paket'] == "Membership"){
                         continue;
                     }
-                    $lvlReff = 3; 
-                    $upLevel = array('Paket 4', 'Paket 5', 'Paket 6', 'Paket 7');
-                    if(in_array($row['settings_nama_paket'], $upLevel)){
-                        $lvlReff = 4;
-                    }
+                    $lvlReff = 5;
+                    $lvlMaching = 20;
             ?>
             <div class="section mt-2">
-                <div class="card mb-2 bg-success">
-                    <div class="card-header text-white"><?= $row['settings_nama_paket'] ?> <span class="badge badge-warning"><?= $row['settings_jumlah_tugas'] ?> Ads</span></div>
+                <div class="card mb-2 bg-secondary">
+                    <div class="card-header text-white"><?= $row['settings_nama_paket'] ?> <span class="badge badge-primary"><?= $row['settings_jumlah_tugas'] ?> Video</span></div>
                     <div class="card-body">
-                        <h3 class="card-title text-white">Rp<?= number_format($row['settings_harga_paket']) ?></h3>
+                        <h3 class="card-title text-white"><?= number_format($row['settings_harga_paket']) ?> USDT</h3>
                         <p class="card-text text-white">
-                            Reward: Rp <?= number_format($row['settings_reward_tugas']) ?> / Ads <br>
-                            Referral <?= $lvlReff ?> Lvl
+                            Sponsor <?= $lvlReff ?> Lvl <br>
+                            Matching <?= $lvlMaching ?> Lvl
                         </p>
                     </div>
                     <div class="card-footer text-end">
                         <a href="#" data-bs-toggle="modal" data-bs-target="#buy<?= $row['id'] ?>" class="btn btn-danger">
-                            <?= $row['settings_nama_paket'] == "Magang" ? "Trial" : "Buy" ?>
+                            Buy
                         </a>
                     </div>
                 </div>
@@ -89,18 +141,10 @@ include "config/paketConfig.php"
                             <div class="action-sheet-content">
                                 <form method="post" action="">
                                     <input type="hidden" name="namePaket" value="<?= $row['settings_nama_paket'] ?>">                                
-                                    <h3>Rp<?= number_format($row['settings_harga_paket']) ?></h3>
-                                    Reward: Rp<?= number_format($row['settings_reward_tugas']) ?> / Ads <br>
-                                    Referral <?= $lvlReff ?> Lvl
-                                    <?php if($row['settings_nama_paket'] == "Magang"){ ?>
-                                        <div class="form-group basic">
-                                            <label class="label" for="code">Enter Code</label>
-                                            <div class="mb-2">
-                                                <input type="text" class="form-control" placeholder="Enter your code"
-                                                    name="code" id="code">
-                                            </div>
-                                        </div>
-                                    <?php } ?>
+                                    <h3><?= number_format($row['settings_harga_paket']) ?> USDT</h3>
+                                    <?= $row['settings_jumlah_tugas'] ?> Video Youtube <br>
+                                    Sponsor <?= $lvlReff ?> Lvl <br>
+                                    Matching <?= $lvlMaching ?> Lvl
                                     <script>
                                         function loadingForm() {
                                             // Mengatur tombol menjadi tidak dapat di-klik selama proses loading
@@ -118,6 +162,23 @@ include "config/paketConfig.php"
                 </div>
             </div>
             <?php } ?>
+
+            <!-- * ios style 16 -->
+        <?php  
+            }else{
+        ?>
+            <!-- * Stats -->
+            <div class="section mt-3">
+                <div class="card card-with-icon">
+                    <div class="card-body pt-3 pb-3 text-center">
+                        <div class="card-icon bg-danger mb-2">
+                            <ion-icon name="trash-bin-outline"></ion-icon>
+                        </div>
+                        <h3 class="card-titlde mb-1">Anda Sudah Membeli Paket</h3>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
 
             <!-- ios style 16 -->
             <div id="alertdanger" class="notification-box">
@@ -168,22 +229,6 @@ include "config/paketConfig.php"
                     </div>
                 </div>
             </div>
-            <!-- * ios style 16 -->
-        <?php  
-            }else{
-        ?>
-            <!-- * Stats -->
-            <div class="section mt-3">
-                <div class="card card-with-icon">
-                    <div class="card-body pt-3 pb-3 text-center">
-                        <div class="card-icon bg-danger mb-2">
-                            <ion-icon name="trash-bin-outline"></ion-icon>
-                        </div>
-                        <h3 class="card-titlde mb-1">Anda Sudah Membeli Paket</h3>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
 
     </div>
     <!-- * App Capsule -->

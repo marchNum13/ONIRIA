@@ -8,7 +8,7 @@ include "config/loginConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Login</title>
+    <title>Oniria - Login</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -51,7 +51,7 @@ include "config/loginConfig.php"
 
         <div class="section mt-2 text-center">
             <h1>Log in</h1>
-            <h4>Watch, Learn And Earn</h4>
+            <h4>Watch To Earn</h4>
         </div>
         <div class="section mb-5 p-2">
 

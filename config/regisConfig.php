@@ -6,10 +6,14 @@ if($_SESSION['login_ads'] == true){
 }
 include "databaseClass/connMySQLClass.php";
 include "databaseClass/userTableClass.php";
+include "databaseClass/settingsPaketTableClass.php";
+include "databaseClass/paketNonPremiumTableClass.php";
 include "apiTele.php";
 
 
 $userTableClass = new userTableClass();
+$settingsPaketTableClass = new settingsPaketTableClass();
+$paketNonPremiumTableClass = new paketNonPremiumTableClass();
 
 $alert_error = "";
 
@@ -65,16 +69,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Data yang akan disimpan ke database
                             $fields = "user_username, user_refferal, user_email, user_password, user_upline";
                             $values = "'$username', '$refferalUser', '$email', '$hashedPassword', '$upline'";
-    
+
                             // Insert data user baru ke database
                             $insert = $userTableClass->insertUser($fields, $values);
                             if($insert){
                                 sleep(2);
-                                $usernameUpline = memberName($upline);
-                                sendMessage("regis", $username, $usernameUpline, "", "");
-                                $_SESSION['alert_success'] = "Silahkan Login!";
-                                header("Location: index");
-                                exit();
+                                // insertPaket basic
+                                $dataPaket = dataPaket();
+                                $dateNow = round(microtime(true) * 1000);
+                                $nominal = $dataPaket['settings_harga_paket'];
+                                $paket = "Free";
+                                $rewardSatu = $dataPaket['settings_reward_tugas_satu'];
+                                $rewardDua = $dataPaket['settings_reward_tugas_dua'];
+                                $jumlah = $dataPaket['settings_jumlah_tugas'];
+                                $userAds = $refferalUser;
+
+                                // paketBasic
+                                $idPaketBuy = generateUniquePaketBasicId();
+                                $insertBasicPaket = $paketNonPremiumTableClass->insertPaket(
+                                    fields:"paket_id, paket_user_id, paket_nominal, paket_name, paket_reward_tugas_satu, paket_reward_tugas_dua, paket_jumlah_tugas, paket_ads_stop_date, paket_date",
+                                    value:"'$idPaketBuy', '$userAds', '$nominal', '$paket', '$rewardSatu', '$rewardDua', '$jumlah', '$dateNow', '$dateNow'"
+                                );
+                                if($insertBasicPaket){
+                                    $usernameUpline = memberName($upline);
+                                    sendMessage("regis", $username, $usernameUpline, "", "");
+                                    $_SESSION['alert_success'] = "Silahkan Login!";
+                                    header("Location: index");
+                                    exit();
+                                }
+
                             }
                         }else{
                             sleep(2);
@@ -96,8 +119,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             sleep(2);
             $alert_error = "Verifikasi reCAPTCHA gagal!";
         }
+    }
+}
 
+function dataPaket(){
+    global $settingsPaketTableClass;
 
+    $data = $settingsPaketTableClass->selectPaket(
+        fields:"id, settings_nama_paket, settings_harga_paket, settings_reward_tugas_satu, settings_reward_tugas_dua, settings_jumlah_tugas",
+        key:"settings_nama_paket = 'Membership'"
+    );
+
+    return $data['data'][0];
+}
+
+function generateUniquePaketBasicId(){
+    global $paketNonPremiumTableClass;
+    $paketId = substr(uniqid(), -7); // Mengambil 7 karakter terakhir dari uniqid()
+    $data = $paketNonPremiumTableClass->selectPaket(
+        fields:"paket_id",
+        key:"paket_id = '$paketId'"
+    );
+    if ($data['row'] > 0) {
+        return generateUniquePaketBasicId();
+    } else {
+        return $paketId;
     }
 }
 

@@ -18,10 +18,8 @@ $emailUbahEmail = $settingData['data'][0]['user_email'];
 $usernameUbahUsername = $settingData['data'][0]['user_username'];
 
 if($settingBank['row'] > 0){
-    $namaBank = $settingBank['data'][0]['bank'];
-    $namaAkunBank = $settingBank['data'][0]['atas_nama'];
     $noBank = $settingBank['data'][0]['rek'];
-    $previewBank = $namaBank . " (" . substr($noBank, 0, 4) . "****)";
+    $previewBank = substr($noBank, 0, 4) . "****";
 }else{
     $previewBank = "Belum diatur";
 }
@@ -134,35 +132,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     if(isset($_POST['simpanBank'])){
-        $namaBank = strtoupper(trim(htmlspecialchars($_POST['namaBank'])));
-        $namaAkunBank = ucwords(strtolower(trim(htmlspecialchars($_POST['namaAkunBank']))));
+        // $namaBank = strtoupper(trim(htmlspecialchars($_POST['namaBank'])));
+        // $namaAkunBank = ucwords(strtolower(trim(htmlspecialchars($_POST['namaAkunBank']))));
         $noBank = trim(htmlspecialchars($_POST['noBank']));
         $passwordAkunBank = trim($_POST['passwordAkunBank']);
-        if($_POST['namaBank'] != "" && $_POST['namaAkunBank'] != "" && $_POST['noBank'] != "" && $_POST['passwordAkunBank'] != ""){
+        if($_POST['noBank'] != "" && $_POST['passwordAkunBank'] != ""){
             if(password_verify($passwordAkunBank, $passDb)){
                 $updateBank = false;
                 if($settingBank['row'] > 0){
-                    if($_SESSION['user_role'] == "Member"){
+                    if($_SESSION['user_role'] != "Admin"){
                         $updateBank = $bankUserTableClass->updateBanktUser(
-                            dataSet:"bank_user_account_name = '$namaAkunBank', bank_user_name = '$namaBank', bank_user_number = '$noBank'",
+                            dataSet:"bank_user_number = '$noBank'",
                             key:"bank_user_refferal = '$userAds'"
                         );
                     }else{
                         $updateBank = $bankAdminTableClass->updateBanktAdmin(
-                            dataSet:"bank_admin_account_name = '$namaAkunBank', bank_admin_name = '$namaBank', bank_admin_number = '$noBank'",
+                            dataSet:"bank_admin_number = '$noBank'",
                             key:"1"
                         );
                     }
                 }else{
-                    if($_SESSION['user_role'] == "Member"){
+                    if($_SESSION['user_role'] != "Admin"){
                         $updateBank = $bankUserTableClass->insertBanktUser(
-                            fields:"bank_user_refferal, bank_user_account_name, bank_user_name, bank_user_number",
-                            value:"'$userAds', '$namaAkunBank', '$namaBank', '$noBank'"
+                            fields:"bank_user_refferal, bank_user_number",
+                            value:"'$userAds','$noBank'"
                         );
                     }else{
                         $updateBank = $bankAdminTableClass->insertBanktAdmin(
-                            fields:"bank_admin_account_name, bank_admin_name, bank_admin_number",
-                            value:"'$namaAkunBank', '$namaBank', '$noBank'"
+                            fields:"bank_admin_number",
+                            value:"'$noBank'"
                         );
                     }
                 }
@@ -189,14 +187,14 @@ function settingBank(){
     $userAds = $_SESSION['user_ads'];
     $role = $_SESSION['user_role'];
 
-    if($role == "Member"){
+    if($role != "Admin"){
         $data = $bankUserTableClass->selectBanktUser(
-            fields:"bank_user_account_name AS bank, bank_user_name AS atas_nama, bank_user_number AS rek",
+            fields:"bank_user_number AS rek",
             key:"bank_user_refferal = '$userAds'"
         );
     }else{
         $data = $bankAdminTableClass->selectBanktAdmin(
-            fields:"bank_admin_account_name AS bank, bank_admin_name AS atas_nama, bank_admin_number AS rek",
+            fields:"bank_admin_number AS rek",
             key:"1"
         );
     }

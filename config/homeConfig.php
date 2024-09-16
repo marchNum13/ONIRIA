@@ -13,10 +13,14 @@ include "databaseClass/bankAdminTableClass.php";
 include "databaseClass/depositTableClass.php";
 include "databaseClass/withdrawTableClass.php";
 include "databaseClass/bonusTableClass.php";
+include "databaseClass/bonusMatchingTableClass.php";
 include "databaseClass/profitTableClass.php";
 include "databaseClass/adsUserTableClass.php";
+include "databaseClass/adsBasicUserTableClass.php";
 include "databaseClass/paketTableClass.php";
+include "databaseClass/paketNonPremiumTableClass.php";
 include "databaseClass/settingsPaketTableClass.php";
+include "databaseClass/settingsMatchingTableClass.php";
 include "databaseClass/userTableClass.php";
 include "apiTele.php";
 
@@ -26,10 +30,14 @@ $bankAdminTableClass = new bankAdminTableClass();
 $depositTableClass = new depositTableClass();
 $withdrawTableClass = new withdrawTableClass();
 $bonusTableClass = new bonusTableClass();
+$bonusMatchingTableClass = new bonusMatchingTableClass();
 $profitTableClass = new profitTableClass();
 $adsUserTableClass = new adsUserTableClass();
+$adsBasicUserTableClass = new adsBasicUserTableClass();
 $paketTableClass = new paketTableClass();
+$paketNonPremiumTableClass = new paketNonPremiumTableClass();
 $settingsPaketTableClass = new settingsPaketTableClass();
+$settingsMatchingTableClass = new settingsMatchingTableClass();
 $userTableClass = new userTableClass();
 
 $dateNowMilis = round(microtime(true) * 1000); // UTC currentmillis
@@ -43,25 +51,31 @@ if($memberBank['row'] > 0){
     $namaBank = $memberBank['data'][0]['bank_user_name'];
     $namaAkunBank = $memberBank['data'][0]['bank_user_account_name'];
     $noBank = $memberBank['data'][0]['bank_user_number'];
-    $bankUserDepo = $bankUserWd = $namaBank . ": " . $namaAkunBank . " (" . $noBank . ")";
+    $bankUserDepo = $bankUserWd = $memberBank['data'][0]['bank_user_number'];
 }else{
     $bankUserDepo = $bankUserWd = "Belum diatur";
 }
 
 $adminBank = adminBank();
 $createdAds = createdAds();
+
+if(getPaketUser()['row'] == 0){
+    $createdAdsBasicPaket = createdAdsBasicPaket();
+}
+
 if($adminBank['row'] > 0){
     $namaBankAdmin = $adminBank['data'][0]['bank_admin_name'];
     $namaAkunBankAdmin = $adminBank['data'][0]['bank_admin_account_name'];
     $noBankAdmin = $adminBank['data'][0]['bank_admin_number'];
-    $bankAdminDepo = $namaBankAdmin . ": " . $namaAkunBankAdmin . " (" . $noBankAdmin . ")";
+    $bankAdminDepo = $adminBank['data'][0]['bank_admin_number'];
 }else{
     $bankAdminDepo = "Belum diatur";
 }
 
-$minWD = 100000;
-$feeWD = (12.5 / 100);
+$minWD = 20;
+$feeWD = 3;
 $alert_error = "";
+
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $userAds = $_SESSION['user_ads'];
     if(isset($_POST['deposit'])){
@@ -69,42 +83,43 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         if($checkDepo['row'] == 0){
             $bankAdminDepo = trim(htmlspecialchars($_POST['bankAdminDepo']));
             $bankUserDepo = trim(htmlspecialchars($_POST['bankUserDepo']));
+            $bukti_tf = trim(htmlspecialchars($_POST['bukti_tf']));
             $jumlahDepo = $_POST['jumlahDepo'] == "" ? "0" : trim(htmlspecialchars($_POST['jumlahDepo']));
             $depositDate = round(microtime(true) * 1000);
             // Validasi input
-            if($jumlahDepo > 0 && $_FILES['bukti_tf']['error'] !== UPLOAD_ERR_NO_FILE) {
-                // Mengunggah bukti transfer
-                $targetDir = "bukti_tf/";
-                $fileType = pathinfo($_FILES["bukti_tf"]["name"], PATHINFO_EXTENSION);
-                $uniqueFileName = uniqid() . '.' . $fileType; // Menggunakan kode unik untuk nama file
-                $targetFilePath = $targetDir . $uniqueFileName;
-                // Memeriksa tipe file yang diunggah
-                $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-                if(in_array($fileType, $allowTypes)) {
-                    // Pindahkan file yang diunggah ke direktori tujuan
-                    if(move_uploaded_file($_FILES["bukti_tf"]["tmp_name"], $targetFilePath)) {
-                        $depositId = generateUniqueDepositId();
-                        $fields = "deposit_id, deposit_user_id, deposit_nominal, deposit_bank_admin, deposit_bank_user, deposit_bukti, deposit_date";
-                        $values = "'$depositId', '$userAds', '$jumlahDepo', '$bankAdminDepo', '$bankUserDepo', '$targetFilePath', '$depositDate'";
-                        if ($depositTableClass->insertDeposit($fields, $values)) {
-                            sleep(2);
-                            $userData = memberName($userAds);
-                            sendMessage("depo", $userData, "", $jumlahDepo, "");
-                            $_SESSION['alert_success'] = "Deposit berhasil.";
-                            header("Location: home");
-                            exit();
-                        }else{
-                            sleep(2);
-                            $alert_error = "Gagal mengunggah file.";
-                        }
-                    }else{
-                        sleep(2);
-                        $alert_error = "Gagal mengunggah file.";
-                    }
+            if($jumlahDepo > 0 && $bukti_tf != "" && $bankAdminDepo != "" && ($bankUserDepo != "" && $bankUserDepo != "Belum diatur")) {
+                $depositId = generateUniqueDepositId();
+                $fields = "deposit_id, deposit_user_id, deposit_nominal, deposit_bank_admin, deposit_bank_user, deposit_bukti, deposit_date";
+                $values = "'$depositId', '$userAds', '$jumlahDepo', '$bankAdminDepo', '$bankUserDepo', '$bukti_tf', '$depositDate'";
+                if ($depositTableClass->insertDeposit($fields, $values)) {
+                    sleep(2);
+                    $userData = memberName($userAds);
+                    sendMessage("depo", $userData, "", $jumlahDepo, "");
+                    $_SESSION['alert_success'] = "Deposit berhasil.";
+                    header("Location: home");
+                    exit();
                 }else{
                     sleep(2);
-                    $alert_error = "Format file yang diperbolehkan: JPG, JPEG, PNG, GIF, PDF.";
+                    $alert_error = "Gagal menyimpan data.";
                 }
+                // // Mengunggah bukti transfer
+                // $targetDir = "bukti_tf/";
+                // $fileType = pathinfo($_FILES["bukti_tf"]["name"], PATHINFO_EXTENSION);
+                // $uniqueFileName = uniqid() . '.' . $fileType; // Menggunakan kode unik untuk nama file
+                // $targetFilePath = $targetDir . $uniqueFileName;
+                // // Memeriksa tipe file yang diunggah
+                // $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+                // if(in_array($fileType, $allowTypes)) {
+                //     // Pindahkan file yang diunggah ke direktori tujuan
+                //     if(move_uploaded_file($_FILES["bukti_tf"]["tmp_name"], $targetFilePath)) {
+                //     }else{
+                //         sleep(2);
+                //         $alert_error = "Gagal mengunggah file.";
+                //     }
+                // }else{
+                //     sleep(2);
+                //     $alert_error = "Format file yang diperbolehkan: JPG, JPEG, PNG, GIF, PDF.";
+                // }
             }else{
                 sleep(2);
                 $alert_error = "Data tidak boleh kosong.";
@@ -115,44 +130,48 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     if(isset($_POST['withdraw'])){
-        $checkPaketBayar = $paketTableClass->selectPaket(
-            fields:"paket_name, paket_nominal",
-            key:"paket_user_id = '$userAds' ORDER BY paket_name DESC LIMIT 1"
-
+        $withdrawDate = round(microtime(true) * 1000);
+        $checkPaketBasic = $paketNonPremiumTableClass->selectPaket(
+            fields:"paket_name, paket_date",
+            key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
         );
-        if($checkPaketBayar['row'] > 0){
+        if($checkPaketBasic['data'][0]['paket_name'] == "Free"){
+            $dateEnd = 0;
+        }elseif($checkPaketBasic['data'][0]['paket_name'] == "Membership"){
+            $dateEnd = $checkPaketBasic['data'][0]['paket_date'] + (30*24*60*60*1000);
+        }
+        if($dateEnd >= $withdrawDate){
             if($checkPaketBayar['data'][0]['paket_name'] != "Magang"){
                 $checkWd = $withdrawTableClass->selectWithdraw("withdraw_user_id", "withdraw_user_id = '$userAds' AND withdraw_status = 'Pending' LIMIT 1");
                 if($checkWd['row'] == 0){
                     $bankUserWd = trim(htmlspecialchars($_POST['bankUserWd']));
                     $mount = $_POST['mount'] == "" ? "0" : trim(htmlspecialchars($_POST['mount']));
-                    $withdrawDate = round(microtime(true) * 1000);
                     if($mount > 0){
-                        $saldo = getWallet();
+                        $saldo = getWallet()['user_saldo'];
                         if($saldo >= $mount){
                             if($mount >= $minWD){
-                                $maxWd = $checkPaketBayar['data'][0]['paket_nominal'];
-                                $sisaWd = sisaWD($userAds, $maxWd);
-                                if($mount <= $sisaWd){
-                                    $wdId = generateUniqueWDId();
-                
-                                    $fields = "withdraw_id, withdraw_user_id, withdraw_nominal, withdraw_fee_admin, withdraw_bank_user, withdraw_date";
-                                    $values = "'$wdId', '$userAds', '$mount', $feeWD, '$bankUserWd', '$withdrawDate'";
-                                    if($withdrawTableClass->insertWithdraw($fields, $values)) {
-                                        sleep(2);
-                                        $userData = memberName($userAds);
-                                        sendMessage("wd", $userData, "", $mount, "");
-                                        $_SESSION['alert_success'] = "Withdraw berhasil.";
-                                        header("Location: home");
-                                        exit();
-                                    }else{
-                                        sleep(2);
-                                        $alert_error = "Gagal menyimpan penarikan.";
-                                    }
+                                $wdId = generateUniqueWDId();
+            
+                                $fields = "withdraw_id, withdraw_user_id, withdraw_nominal, withdraw_fee_admin, withdraw_bank_user, withdraw_date";
+                                $values = "'$wdId', '$userAds', '$mount', $feeWD, '$bankUserWd', '$withdrawDate'";
+                                if($withdrawTableClass->insertWithdraw($fields, $values)) {
+                                    sleep(2);
+                                    $userData = memberName($userAds);
+                                    sendMessage("wd", $userData, "", $mount, "");
+                                    $_SESSION['alert_success'] = "Withdraw berhasil.";
+                                    header("Location: home");
+                                    exit();
                                 }else{
                                     sleep(2);
-                                    $alert_error = "Sisa WD harian Rp" . number_format($sisaWd) . " (Max WD perhari Rp" . number_format($maxWd) . ")";
+                                    $alert_error = "Gagal menyimpan penarikan.";
                                 }
+                                // $maxWd = $checkPaketBayar['data'][0]['paket_nominal'];
+                                // $sisaWd = sisaWD($userAds, $maxWd);
+                                // if($mount <= $sisaWd){
+                                // }else{
+                                //     sleep(2);
+                                //     $alert_error = "Sisa WD harian Rp" . number_format($sisaWd) . " (Max WD perhari Rp" . number_format($maxWd) . ")";
+                                // }
                             }else{
                                 sleep(2);
                                 $alert_error = "Min WD Rp" . number_format($minWD);
@@ -175,50 +194,70 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }else{
             sleep(2);
-            $alert_error = "Minimal berlangganan 1 paket berbayar.";
+            $alert_error = "Anda belum terdaftar sebagai membership.";
         }
     }
     if(isset($_POST['klaim'])){
         $adsID = trim(htmlspecialchars($_POST['adsID']));
+        $adsType = trim(htmlspecialchars($_POST['adsType']));
+        $dateNowUTC = round(microtime(true) * 1000);
         if($adsID != ""){
-            $checkAds = $adsUserTableClass->selectAds("ads_reward", "ads_id = '$adsID' AND ads_status = 'Aktif' AND ads_user_id = '$userAds' LIMIT 1");
-            if($checkAds['row'] > 0){
-                $nominalRW = $checkAds['data'][0]['ads_reward'];
-                $proftId = generateUniqueProfitId();
-                $dateNowUTC = round(microtime(true) * 1000);
-                $insertProfit = $profitTableClass->insertProfit(
-                    fields:"
-                        profit_id,
-                        profit_user_id,
-                        profit_ads_id,
-                        profit_nominal,
-                        profit_date
-                    ",
-                    value:"
-                        '$proftId',
-                        '$userAds',
-                        '$adsID',
-                        '$nominalRW',
-                        '$dateNowUTC'
-                    "
+
+            if($adsType == "basic"){
+                $paketBasicUser = $paketNonPremiumTableClass->selectPaket(
+                    fields:"paket_name, paket_date",
+                    key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
                 );
-                if($insertProfit){
-                    $updateStatusAds = $adsUserTableClass->updateAds(
-                        dataSet:"ads_status = 'Tidak Aktif'",
-                        key:"ads_id = '$adsID'"
-                    );
-                    if($updateStatusAds){
-                        $saldo = getWallet();
-                        $saldoNow = $nominalRW + $saldo;
-                        $updateWallet = $walletUserTableClass->updateWalletUser(
-                            dataSet:"user_saldo = '$saldoNow'",
-                            key:"user_refferal = '$userAds'"
+                $dateEnd = $paketBasicUser['data'][0]['paket_date'] + (7*24*60*60*1000);
+                if($dateEnd >= $dateNowUTC && $paketBasicUser['data'][0]['paket_name'] == "Free"){
+                    $checkAds = $adsBasicUserTableClass->selectAds("ads_reward", "ads_id = '$adsID' AND ads_status = 'Aktif' AND ads_user_id = '$userAds' LIMIT 1");
+                    if($checkAds['row'] > 0){
+                        $nominalRW = $checkAds['data'][0]['ads_reward'];
+                        $proftId = generateUniqueProfitId();
+                        $insertProfit = $profitTableClass->insertProfit(
+                            fields:"
+                                profit_id,
+                                profit_user_id,
+                                profit_ads_id,
+                                profit_nominal,
+                                profit_type,
+                                profit_date
+                            ",
+                            value:"
+                                '$proftId',
+                                '$userAds',
+                                '$adsID',
+                                '$nominalRW',
+                                'Basic',
+                                '$dateNowUTC'
+                            "
                         );
-                        if($updateWallet){
-                            sleep(2);
-                            $_SESSION['alert_success'] = "Klaim berhasil.";
-                            header("Location: home");
-                            exit();
+                        if($insertProfit){
+                            $updateStatusAds = $adsBasicUserTableClass->updateAds(
+                                dataSet:"ads_status = 'Tidak Aktif'",
+                                key:"ads_id = '$adsID'"
+                            );
+                            if($updateStatusAds){
+                                $saldo = getWallet()['user_saldo_token'];
+                                $saldoNow = $nominalRW + $saldo;
+                                $updateWallet = $walletUserTableClass->updateWalletUser(
+                                    dataSet:"user_saldo_token = '$saldoNow'",
+                                    key:"user_refferal = '$userAds'"
+                                );
+                                if($updateWallet){
+                                    // bonus upline
+                                    sleep(2);
+                                    $_SESSION['alert_success'] = "Klaim berhasil.";
+                                    header("Location: home");
+                                    exit();
+                                }else{
+                                    sleep(2);
+                                    $alert_error = "Error.";
+                                }
+                            }else{
+                                sleep(2);
+                                $alert_error = "Error.";
+                            }
                         }else{
                             sleep(2);
                             $alert_error = "Error.";
@@ -229,7 +268,85 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Error.";
+                    $alert_error = "Masa percoban anda telah berakhir.";
+                }
+
+            }elseif($adsType == "premium"){
+                $paketBasicUser = $paketNonPremiumTableClass->selectPaket(
+                    fields:"paket_name, paket_date",
+                    key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
+                );
+                $dateEnd = $paketBasicUser['data'][0]['paket_date'] + (30*24*60*60*1000);
+                if($dateEnd >= $dateNowUTC && $paketBasicUser['data'][0]['paket_name'] == "Membership"){
+                    $checkAds = $adsUserTableClass->selectAds("ads_reward", "ads_id = '$adsID' AND ads_status = 'Aktif' AND ads_user_id = '$userAds' LIMIT 1");
+                    if($checkAds['row'] > 0){
+                        $nominalRW = $checkAds['data'][0]['ads_reward'];
+                        if(isLimitProfit($userAds, $nominalRW)){
+                            sleep(2);
+                            $alert_error = "Paket Premium Anda telah Mencapai Limit.";
+                        }else{
+                            $proftId = generateUniqueProfitId();
+                            $insertProfit = $profitTableClass->insertProfit(
+                                fields:"
+                                    profit_id,
+                                    profit_user_id,
+                                    profit_ads_id,
+                                    profit_nominal,
+                                    profit_type,
+                                    profit_date
+                                ",
+                                value:"
+                                    '$proftId',
+                                    '$userAds',
+                                    '$adsID',
+                                    '$nominalRW',
+                                    'Premium',
+                                    '$dateNowUTC'
+                                "
+                            );
+                            if($insertProfit){
+                                $updateStatusAds = $adsUserTableClass->updateAds(
+                                    dataSet:"ads_status = 'Tidak Aktif'",
+                                    key:"ads_id = '$adsID'"
+                                );
+                                if($updateStatusAds){
+                                    $saldo = getWallet()['user_saldo'];
+                                    $saldoNow = $nominalRW + $saldo;
+                                    $updateWallet = $walletUserTableClass->updateWalletUser(
+                                        dataSet:"user_saldo = '$saldoNow'",
+                                        key:"user_refferal = '$userAds'"
+                                    );
+                                    if($updateWallet){
+                                        // update bonus upline
+                                        $userAdsUpline = getUser($userAds)['data'][0]['user_upline'];
+                                        $lvl = 1;
+                                        $giveBonus = bonusUpline($userAds, $userAdsUpline, $lvl, $nominalRW, $dateNowUTC);
+                                        if($giveBonus){
+                                            sleep(2);
+                                            $_SESSION['alert_success'] = "Klaim berhasil.";
+                                            header("Location: home");
+                                            exit();
+                                        }
+                                    }else{
+                                        sleep(2);
+                                        $alert_error = "Error.";
+                                    }
+                                }else{
+                                    sleep(2);
+                                    $alert_error = "Error.";
+                                }
+                            }else{
+                                sleep(2);
+                                $alert_error = "Error.";
+                            }
+                        }
+                    }else{
+                        sleep(2);
+                        $alert_error = "Error.";
+                    }
+                }else{
+                    sleep(2);
+                    $alert_error = "Anda tidak terdaftar sebagai membership.";
                 }
             }else{
                 sleep(2);
@@ -242,16 +359,160 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-function geSaldoCuan(){
+function isLimitProfit($user, $addBonus = 0){
+
+    global $bonusTableClass;
+    global $bonusMatchingTableClass;
+    global $profitTableClass;
     global $paketTableClass;
-    $userAds = $_SESSION['user_ads'];
 
-    $data = $paketTableClass->selectPaket(
-        fields: "paket_nominal_cuan, paket_date_capitalback",
-        key: "paket_user_id = '$userAds' AND paket_name <> 'Magang'"
+    $bonusSponsor = $bonusTableClass->selectBonus(
+        fields: "SUM(bonus_nominal) AS total",
+        key: "bonus_user_id = '$user'"
+    )['data'][0]['total'];
+
+    $bonusMatching = $bonusMatchingTableClass->selectBonus(
+        fields: "SUM(bonus_nominal) AS total",
+        key: "bonus_user_id = '$user'"
+    )['data'][0]['total'];
+
+    $bonusVideo = $profitTableClass->selectProfit(
+        fields: "SUM(profit_nominal) AS total",
+        key: "profit_user_id = '$user' AND profit_type = 'Premium'"
+    )['data'][0]['total'];
+
+    $totalProfit = $bonusSponsor + $bonusMatching + $bonusVideo + $addBonus;
+
+    $paketUser = $paketTableClass->selectPaket(
+        fields:"SUM(paket_nominal) AS total",
+        key:"paket_user_id = '$user'"
+    )['data'][0]['total'];
+
+    $totalLimit = $paketUser * 2.5;
+
+    if($totalProfit >= $totalLimit){
+        return true;
+    }
+
+    return false;
+}
+
+function bonusUpline($userAds, $userAdsUpline, $lvl, $nominal, $dateNow){
+    // global $paketTableClass;
+    global $settingsMatchingTableClass;
+    global $walletUserTableClass;
+    global $bonusMatchingTableClass;
+    global $paketTableClass;
+    if($nominal > 0){
+        if($userAdsUpline != "NONE"){
+            if($lvl <= 20){
+                if(paketBasicUserIsActive($userAdsUpline, $dateNow)){
+                    $paketPremiumUpline = $paketTableClass->selectPaket(
+                        fields:"paket_name, paket_date",
+                        key:"paket_user_id = '$userAdsUpline' ORDER BY paket_date DESC LIMIT 1"
+                    );
+                    if($paketPremiumUpline['row'] == 0){
+                        return true;
+                    }else{
+                        $pakeLvl = "Level " . $lvl;
+                        $getPercentBonus = $settingsMatchingTableClass->selectBonus(
+                            fields:"bonus_persen AS percen", 
+                            key:"bonus_lvl = '$pakeLvl'"
+                        );
+                        $percenBonus = $getPercentBonus['data'][0]['percen'] / 100;
+                        $totalBonus = ($nominal * 0.2) * $percenBonus;
+                        $dataWalletUpline = $walletUserTableClass->selectWalletUser(
+                            fields:"user_saldo",
+                            key:"user_refferal = '$userAdsUpline'"
+                        );
+                        $saldoUpline = $dataWalletUpline['data'][0]['user_saldo'] + $totalBonus;
+                        $updateWalletUpline = $walletUserTableClass->updateWalletUser(
+                            dataSet:"user_saldo = '$saldoUpline'",
+                            key:"user_refferal = '$userAdsUpline'"
+                        );
+                        if($updateWalletUpline){
+                            $bonusId = generateUniqueBonusId();
+                            $strLVL = "LEVEL " . $lvl; 
+                            $insertReport = $bonusMatchingTableClass->insertBonus(
+                                fields:"
+                                        bonus_id, 
+                                        bonus_user_id, 
+                                        bonus_nominal, 
+                                        bonus_persen, 
+                                        bonus_user_downline,
+                                        bonus_level,
+                                        bonus_date
+                                    ",
+                                value:"
+                                        '$bonusId',
+                                        '$userAdsUpline',
+                                        '$totalBonus',
+                                        '$percenBonus',
+                                        '$userAds',
+                                        '$strLVL',
+                                        '$dateNow'
+                                    "
+                            );
+                            if($insertReport){
+                                $uplineTwo = getUser($userAdsUpline)['data'][0]['user_upline'];
+                                return bonusUpline($userAdsUpline, $uplineTwo, $lvl+1, $nominal, $dateNow);
+                            }
+                        }
+                    }
+                }else{
+                    return true;
+                }
+            }else{
+                return true;
+            }
+        }else{
+            return true;
+        }
+    }else{
+        return true;
+    }
+
+}
+
+function paketBasicUserIsActive($userAds, $dateNowUTC){
+    global $paketNonPremiumTableClass;
+    $paketUser = $paketNonPremiumTableClass->selectPaket(
+        fields:"paket_name, paket_date",
+        key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
     );
+    $result = true;
+    if($paketUser['data'][0]['paket_name'] == "Free"){
+        $result = false;
+    }elseif($paketUser['data'][0]['paket_name'] == "Membership"){
+        $dateEnd = $paketUser['data'][0]['paket_date'] + (30*24*60*60*1000);
+        if($dateEnd < $dateNowUTC){
+            $result = false;
+        }
+    }
+    return $result;
+}
 
+function getUser($userAds){
+    global $userTableClass;
+    $data = $userTableClass->selectUser(
+        fields:"user_upline",
+        key:"user_refferal = '$userAds' LIMIT 1"
+    );
     return $data;
+}
+
+function generateUniqueBonusId(){
+    global $bonusMatchingTableClass;
+    $bonusId = substr(uniqid(), -7); // Mengambil 7 karakter terakhir dari uniqid()
+    $data = $bonusMatchingTableClass->selectBonus(
+        fields:"bonus_id",
+        key:"bonus_id = '$bonusId'"
+    );
+    if ($data['row'] > 0) {
+        return generateUniqueBonusId();
+    } else {
+        return $bonusId;
+    }
 }
 
 function sisaWD($userAds, $maxWd){
@@ -317,6 +578,7 @@ function memberName($id){
 
 function omsetMounth(){
     global $paketTableClass;
+    global $paketNonPremiumTableClass;
     global $lastDayOfMonth;
     global $firstDayOfMonth;
     $paketUser = $paketTableClass->selectPaket(
@@ -326,11 +588,21 @@ function omsetMounth(){
             AND (
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$firstDayOfMonth 00:00:00' AND 
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$lastDayOfMonth 23:59:59'
-            ) AND (paket_user_id <> '3d77666' AND paket_user_id <> '58a5c8e' AND paket_user_id <> 'c050c7f' AND paket_user_id <> '809b34b')
+            )
+        "
+    );
+    $paketBasicUser = $paketNonPremiumTableClass->selectPaket(
+        fields:"SUM(paket_nominal) total",
+        key:"
+            paket_name <> 'Free' 
+            AND (
+                DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$firstDayOfMonth 00:00:00' AND 
+                DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$lastDayOfMonth 23:59:59'
+            )
         "
     );
 
-    return $paketUser;
+    return $paketUser['data'][0]['total'] + $paketBasicUser['data'][0]['total'];
 }
 
 function depoMounth(){
@@ -371,6 +643,7 @@ function wdMounth(){
 
 function totalAds(){
     global $adsUserTableClass;
+    global $adsBasicUserTableClass;
     $paket = getPaketUser();
     $userAds = $_SESSION['user_ads'];
     $totalAdsAktif = 0;
@@ -389,12 +662,130 @@ function totalAds(){
                 $totalAds += $data['data'][0]['total'];
             }
         }
-    } 
+    }else{
+        $paket = getPaketBasicUser();
+        foreach($paket['data'] as $row){
+            $date = $row['paket_ads_stop_date'] - (1*24*60*60*1000);
+            $paketId = $row['paket_id'];
+            $jumlahAds = $row['paket_jumlah_tugas'];
+            $dataAktif = $adsBasicUserTableClass->selectAds("COUNT(ads_id) AS total", "ads_status = 'Aktif' AND ads_paket_id = '$paketId' AND ads_user_id = '$userAds' AND ads_date = '$date' ORDER BY ads_date DESC LIMIT $jumlahAds");
+            if($dataAktif['row'] > 0){
+                $totalAdsAktif += $dataAktif['data'][0]['total'];
+            }
+            $data = $adsBasicUserTableClass->selectAds("COUNT(ads_id) AS total", "ads_paket_id = '$paketId' AND ads_user_id = '$userAds' AND ads_date = '$date' ORDER BY ads_date DESC LIMIT $jumlahAds");
+            if($data['row'] > 0){
+                $totalAds += $data['data'][0]['total'];
+            }
+        }
+    
+    }
     
     return [
         'total' => $totalAds,
         'sisa' => $totalAdsAktif,
     ];
+}
+
+function getPaketBasicUser(){
+    global $paketNonPremiumTableClass;
+    $userAds = $_SESSION['user_ads'];
+    $paketUser = $paketNonPremiumTableClass->selectPaket(
+        fields:"paket_id, paket_user_id, paket_nominal, paket_name, paket_reward_tugas_satu, paket_reward_tugas_dua, paket_jumlah_tugas, paket_ads_stop_date, paket_date",
+        key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
+    );
+    return $paketUser;
+}
+
+function createdAdsBasicPaket(){
+    $paket = getPaketBasicUser();
+    if($paket['row'] > 0){
+        foreach($paket['data'] as $row){
+            // tgl pengisian
+            $paketId = $row['paket_id'];
+            $paketNominal = $row['paket_nominal'];
+            $namePaket = $row['paket_name'];
+            $reward_satu = $row['paket_reward_tugas_satu'];
+            $reward_dua = $row['paket_reward_tugas_dua'];
+            $jumlahAds = $row['paket_jumlah_tugas'];
+            $endDay = $row['paket_ads_stop_date'];
+            $dateBuy = $row['paket_date'];
+            $inputAds = inputAdsBasic($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $jumlahAds, $endDay, $dateBuy);
+        }
+    }
+}
+
+function inputAdsBasic($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $jumlahAds, $endDay, $dateBuy){
+    global $adsBasicUserTableClass;
+    global $paketNonPremiumTableClass;
+    // tgl hari ini
+    $thisDay = round(microtime(true) * 1000);
+    if($thisDay >= $endDay){
+        $process = true;
+        // check stqtus user 30 hari untuk membership dan 7 hari untuk free
+        // $roleUser = userDataa();
+        // if($roleUser == "Free"){
+        //     $stopads = 7*24*60*60*1000;
+        // }elseif($roleUser == "Membership"){
+        //     $stopads = 30*24*60*60*1000;
+        // }
+        // if($endDay - $dateBuy > $stopads){
+        //     $process = false;
+        // }
+
+        if($process){
+            $userAds = $_SESSION['user_ads'];
+            $nameAds = "YouTube";
+            $linkAds = "tes";
+            for ($i = 1; $i <= $jumlahAds; $i++) {
+                $idAds = generateUniqueAdsBasicId();
+                if($i == 1){
+                    $rewardPerAds = $reward_satu;
+                }elseif($i == 2){
+                    $rewardPerAds = $reward_dua;
+                }
+                $adsBasicUserTableClass->insertAds(
+                    fields:"
+                        ads_id,
+                        ads_user_id,
+                        ads_paket_id,
+                        ads_name,
+                        ads_reward,
+                        ads_link,
+                        ads_date
+                    ",
+                    value:"
+                        '$idAds',
+                        '$userAds',
+                        '$paketId',
+                        '$nameAds',
+                        '$rewardPerAds',
+                        '$linkAds',
+                        '$endDay'
+                    "
+                );
+            }
+            $nextDay = $endDay + (1*24*60*60*1000);
+            $updateEndDay = $paketNonPremiumTableClass->updatePaket(dataSet:"paket_ads_stop_date = '$nextDay'",key:"paket_id = '$paketId'");
+            if($updateEndDay){
+                return inputAdsBasic($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $jumlahAds, $nextDay, $dateBuy);
+            }
+        }else{
+            return true;
+        }
+    }else{
+        return true;
+    }
+
+}
+
+function getPaketUser(){
+    global $paketTableClass;
+    $userAds = $_SESSION['user_ads'];
+    $paketUser = $paketTableClass->selectPaket(
+        fields:"paket_id, paket_user_id, paket_nominal, paket_name, paket_reward_tugas_satu, paket_reward_tugas_dua, paket_reward_tugas_tiga, paket_jumlah_tugas, paket_ads_stop_date, paket_date",
+        key:"paket_user_id = '$userAds' ORDER BY paket_date DESC LIMIT 1"
+    );
+    return $paketUser;
 }
 
 function createdAds(){
@@ -403,35 +794,54 @@ function createdAds(){
         foreach($paket['data'] as $row){
             // tgl pengisian
             $paketId = $row['paket_id'];
+            $paketNominal = $row['paket_nominal'];
             $namePaket = $row['paket_name'];
-            $rewardPerAds = $row['paket_reward_tugas'];
+            $reward_satu = $row['paket_reward_tugas_satu'];
+            $reward_dua = $row['paket_reward_tugas_dua'];
+            $reward_tiga = $row['paket_reward_tugas_tiga'];
             $jumlahAds = $row['paket_jumlah_tugas'];
             $endDay = $row['paket_ads_stop_date'];
             $dateBuy = $row['paket_date'];
-            $inputAds = inputAds($paketId, $namePaket, $rewardPerAds, $jumlahAds, $endDay, $dateBuy);
+            $inputAds = inputAds($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $reward_tiga, $jumlahAds, $endDay, $dateBuy);
         }
     }
 }
 
-function inputAds($paketId, $namePaket, $rewardPerAds, $jumlahAds, $endDay, $dateBuy){
+function inputAds($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $reward_tiga, $jumlahAds, $endDay, $dateBuy){
     global $adsUserTableClass;
     global $paketTableClass;
     // tgl hari ini
     $thisDay = round(microtime(true) * 1000);
     if($thisDay >= $endDay){
         $process = true;
-        if($namePaket == "Magang"){
-            $fourDay = 4*24*60*60*1000;
-            if($endDay - $dateBuy > $fourDay){
-                $process = false;
-            }
-        }
+        // check stqtus user 30 hari untuk membership dan 7 hari untuk free
+        // $roleUser = userDataa();
+        // if($roleUser == "Free"){
+        //     $stopaads = 7*24*60*60*1000;
+        // }elseif($roleUser == "Membership"){
+        //     $stopaads = 30*24*60*60*1000;
+        // }
+        // if($endDay - $dateBuy > $stopaads){
+        //     $process = false;
+        // }
+
         if($process){
             $userAds = $_SESSION['user_ads'];
             $nameAds = "YouTube";
             $linkAds = "tes";
+            $rewardSatu = ($reward_satu/100)*$paketNominal;
+            $rewardDua = ($reward_dua/100)*$paketNominal;
+            $rewardTiga = ($reward_tiga/100)*$paketNominal;
+
             for ($i = 1; $i <= $jumlahAds; $i++) {
                 $idAds = generateUniqueAdsId();
+                if($i == 1){
+                    $rewardPerAds = $rewardSatu;
+                }elseif($i == 2){
+                    $rewardPerAds = $rewardDua;
+                }else{
+                    $rewardPerAds = $rewardTiga;
+                }
                 $adsUserTableClass->insertAds(
                     fields:"
                         ads_id,
@@ -456,7 +866,7 @@ function inputAds($paketId, $namePaket, $rewardPerAds, $jumlahAds, $endDay, $dat
             $nextDay = $endDay + (1*24*60*60*1000);
             $updateEndDay = $paketTableClass->updatePaket(dataSet:"paket_ads_stop_date = '$nextDay'",key:"paket_id = '$paketId'");
             if($updateEndDay){
-                return inputAds($paketId, $namePaket, $rewardPerAds, $jumlahAds, $nextDay, $dateBuy);
+                return inputAds($paketId, $paketNominal, $namePaket, $reward_satu, $reward_dua, $reward_tiga, $jumlahAds, $nextDay, $dateBuy);
             }
         }else{
             return true;
@@ -465,6 +875,16 @@ function inputAds($paketId, $namePaket, $rewardPerAds, $jumlahAds, $endDay, $dat
         return true;
     }
 
+}
+
+function userDataa(){
+    global $userTableClass;
+    $userAds = $_SESSION['user_ads'];
+    $data = $userTableClass->selectUser(
+        fields:"user_role",
+        key:"user_refferal = '$userAds' LIMIT 1"
+    );
+    return $data['data'][0]['user_role'];
 }
 
 function dateTimeNow($currentmillisdate){
@@ -503,6 +923,18 @@ function generateUniqueProfitId() {
     }
 }
 
+function generateUniqueAdsBasicId() {
+    global $adsBasicUserTableClass;
+    $adsId = substr(uniqid(), -7); // Mengambil 7 karakter terakhir dari uniqid()
+    $check = $adsBasicUserTableClass->selectAds("ads_id", "ads_id = '$adsId' LIMIT 1");
+    
+    if ($check['row'] > 0) {
+        return generateUniqueAdsBasicId();
+    } else {
+        return $adsId;
+    }
+}
+
 function generateUniqueAdsId() {
     global $adsUserTableClass;
     $adsId = substr(uniqid(), -7); // Mengambil 7 karakter terakhir dari uniqid()
@@ -515,17 +947,6 @@ function generateUniqueAdsId() {
     }
 }
 
-function getPaketUser(){
-    global $paketTableClass;
-    $userAds = $_SESSION['user_ads'];
-    $paketUser = $paketTableClass->selectPaket(
-        fields:"paket_id, paket_user_id, paket_name, paket_reward_tugas, paket_jumlah_tugas, paket_ads_stop_date, paket_date",
-        key:"paket_user_id = '$userAds'"
-    );
-
-    return $paketUser;
-}
-
 function getSumBonus(){
     global $bonusTableClass;
     $userAds = $_SESSION['user_ads'];
@@ -533,7 +954,7 @@ function getSumBonus(){
         fields:"SUM(bonus_nominal) total",
         key:"bonus_user_id = '$userAds'"
     );
-    return number_format($data['data'][0]['total']);
+    return number_format($data['data'][0]['total'],2);
 }
 
 function getSumProfit(){
@@ -541,9 +962,9 @@ function getSumProfit(){
     $userAds = $_SESSION['user_ads'];
     $data = $profitTableClass->selectProfit(
         fields:"SUM(profit_nominal) total",
-        key:"profit_user_id = '$userAds'"
+        key:"profit_user_id = '$userAds' AND profit_type = 'Premium'"
     );
-    return number_format($data['data'][0]['total']);
+    return number_format($data['data'][0]['total'],2);
 }
 
 function generateUniqueDepositId() {
@@ -575,11 +996,11 @@ function getWallet(){
     $userAds = $_SESSION['user_ads'];
 
     $data = $walletUserTableClass->selectWalletUser(
-        fields:"user_saldo",
+        fields:"user_saldo, user_saldo_token",
         key:"user_refferal = '$userAds'"
     );
     if($data['row'] > 0){
-        return $data['data'][0]['user_saldo'];
+        return $data['data'][0];
     }else{
         $createWallet = $walletUserTableClass->insertWalletUser(
             fields:"user_refferal",

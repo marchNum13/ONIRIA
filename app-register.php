@@ -9,7 +9,7 @@ include "config/regisConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Registrasi</title>
+    <title>Oniria - Registrasi</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">

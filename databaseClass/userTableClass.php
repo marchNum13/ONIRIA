@@ -16,7 +16,7 @@ class userTableClass extends connMySQLClass{
                 user_refferal VARCHAR(7) NOT NULL UNIQUE,
                 user_email VARCHAR(250) NOT NULL UNIQUE,
                 user_password TEXT NOT NULL,
-                user_role ENUM('Admin','Member') NOT NULL DEFAULT 'Member',
+                user_role ENUM('Admin','Free','Membership') NOT NULL DEFAULT 'Free',
                 user_upline VARCHAR(7) NOT NULL DEFAULT 'NONE',
                 user_code_verif TEXT NOT NULL DEFAULT '0',
                 user_status ENUM('true','false') NOT NULL DEFAULT 'true'

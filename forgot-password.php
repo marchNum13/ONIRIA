@@ -8,7 +8,7 @@ include "config/forgotConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Forgot Password</title>
+    <title>Oniria - Forgot Password</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">

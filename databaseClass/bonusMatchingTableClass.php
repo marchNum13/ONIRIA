@@ -1,9 +1,9 @@
 <?php
 // CLASS TABLE USER
-class profitTableClass extends connMySQLClass{
+class bonusMatchingTableClass extends connMySQLClass{
     
     // SET ATTRIBUTE TABLE NAME
-    private $table_name = "trasaction_profit_user";
+    private $table_name = "trasaction_bonus_matching_user";
     
     // CREATE DEFAULT TABLE
     public function __construct(){
@@ -12,12 +12,13 @@ class profitTableClass extends connMySQLClass{
             // SET QUERY
             $sql = "CREATE TABLE $this->table_name (
                 id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                profit_id VARCHAR(14) NOT NULL UNIQUE,
-                profit_user_id VARCHAR(7) NOT NULL,
-                profit_ads_id VARCHAR(14) NOT NULL,
-                profit_nominal DOUBLE NOT NULL,
-                profit_type ENUM('Basic','Premium') NOT NULL,
-                profit_date TEXT NOT NULL
+                bonus_id VARCHAR(14) NOT NULL UNIQUE,
+                bonus_user_id VARCHAR(7) NOT NULL,
+                bonus_nominal DOUBLE NOT NULL,
+                bonus_persen DOUBLE NOT NULL,
+                bonus_user_downline VARCHAR(7) NOT NULL,
+                bonus_level VARCHAR(50) NOT NULL,
+                bonus_date TEXT NOT NULL
             )";
             // EXECUTE THE QUERY TO CREATE TABLE
             $this->dbConn()->query($sql);
@@ -27,7 +28,7 @@ class profitTableClass extends connMySQLClass{
     }
 
     // insert data
-    public function insertProfit(string $fields, string $value){
+    public function insertBonus(string $fields, string $value){
         // query
         $sql = "INSERT INTO $this->table_name ($fields) VALUE($value)";
         // EXECUTE THE QUERY TO CREATE TABLE
@@ -38,7 +39,7 @@ class profitTableClass extends connMySQLClass{
     }
 
     // get data
-    public function selectProfit(string $fields, string $key){
+    public function selectBonus(string $fields, string $key){
         // query
         $sql = "SELECT $fields FROM $this->table_name WHERE $key";
         // EXECUTE QUERY
@@ -55,9 +56,9 @@ class profitTableClass extends connMySQLClass{
         $this->dbConn()->close();
         return $result;
     }
-    
+
     // update data
-    public function updateProfit(string $dataSet, string $key){
+    public function updateBonus(string $dataSet, string $key){
         // query
         $sql = "UPDATE $this->table_name SET $dataSet WHERE $key";
         // EXECUTE THE QUERY TO CREATE TABLE

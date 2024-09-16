@@ -1,9 +1,9 @@
 <?php
 // CLASS TABLE paket
-class settingsBonusTableClass extends connMySQLClass{
+class settingsMatchingTableClass extends connMySQLClass{
     
     // SET ATTRIBUTE TABLE NAME
-    private $table_name = "settings_bonus_paket";
+    private $table_name = "settings_bonus_matching_paket";
     
     // CREATE DEFAULT TABLE
     public function __construct(){
@@ -26,14 +26,44 @@ class settingsBonusTableClass extends connMySQLClass{
                         "Level 2",
                         "Level 3",
                         "Level 4",
-                        "Level 5"
+                        "Level 5",
+                        "Level 6",
+                        "Level 7",
+                        "Level 8",
+                        "Level 9",
+                        "Level 10",
+                        "Level 11",
+                        "Level 12",
+                        "Level 13",
+                        "Level 14",
+                        "Level 15",
+                        "Level 16",
+                        "Level 17",
+                        "Level 18",
+                        "Level 19",
+                        "Level 20"
                     ],
                     "bonus_persen" => [
-                        "40",
+                        "30",
+                        "30",
                         "10",
                         "5",
                         "3",
-                        "2"
+                        "2",
+                        "2",
+                        "2",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1"
                     ]
                 );
                 foreach($dataArray['bonus_lvl'] as $key => $lvl){

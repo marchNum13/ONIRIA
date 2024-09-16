@@ -4,7 +4,7 @@ if($_SESSION['login_ads'] != true){
     header('Location: index');
     exit();
 }
-if($_SESSION['user_role'] == "Member"){
+if($_SESSION['user_role'] != "Admin"){
     header('Location: home');
     exit();
 }

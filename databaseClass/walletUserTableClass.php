@@ -13,7 +13,8 @@ class walletUserTableClass extends connMySQLClass{
             $sql = "CREATE TABLE $this->table_name (
                 id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 user_refferal VARCHAR(7) NOT NULL UNIQUE,
-                user_saldo DOUBLE NOT NULL DEFAULT '0'
+                user_saldo DOUBLE NOT NULL DEFAULT '0',
+                user_saldo_token DOUBLE NOT NULL DEFAULT '0'
             )";
             // EXECUTE THE QUERY TO CREATE TABLE
             $this->dbConn()->query($sql);

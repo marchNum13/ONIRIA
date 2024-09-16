@@ -8,7 +8,7 @@ include "config/transaksiConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Transaksi</title>
+    <title>Oniria - Transaksi</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -61,8 +61,8 @@ include "config/transaksiConfig.php"
                     <div class="detail">
                         <div class="image-block imaged">
                         <?php  
-                        $plus = array('profit', 'bonus', 'deposit');
-                        $minus = array('paket', 'withdraw');
+                        $plus = array('profit basic', 'profit premium', 'bonus sponsor', 'bonus matching', 'deposit');
+                        $minus = array('paket premium', 'paket membership', 'withdraw');
                         $class = "";
                         $icon = "";
                         if(in_array($row['keterangan'], $plus)){
@@ -86,7 +86,7 @@ include "config/transaksiConfig.php"
                         </div>
                     </div>
                     <div class="right">
-                        <div class="price text-<?= $class ?>"><?= $icon ?>Rp<?= number_format($row['nominal']) ?></div>
+                        <div class="price text-<?= $class ?>"><?= $icon ?><?= number_format($row['nominal'],2) ?> <?= $row['keterangan'] == "profit basic" ? "Nexx" : "USDT" ?></div>
                     </div>
                 </a>
                 <!-- * item -->

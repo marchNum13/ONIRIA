@@ -18,7 +18,7 @@ class adsUserTableClass extends connMySQLClass{
                 ads_name VARCHAR(250) NOT NULL,
                 ads_reward DOUBLE NOT NULL,
                 ads_link TEXT NOT NULL,
-                ads_status ENUM('Aktif','Tidak Aktif') NOT NULL,
+                ads_status ENUM('Aktif','Tidak Aktif') NOT NULL DEFAULT 'Aktif',
                 ads_date TEXT NOT NULL
             )";
             // EXECUTE THE QUERY TO CREATE TABLE

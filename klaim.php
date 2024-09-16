@@ -9,7 +9,7 @@ include "config/klaimConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>AdVenture - Klaim</title>
+    <title>Oniria - Klaim</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">

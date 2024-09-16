@@ -9,7 +9,7 @@ include "config/homeConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Home</title>
+    <title>Oniria - Home</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -36,7 +36,7 @@ include "config/homeConfig.php"
     <?php include "partial/headerhome.php" ?>
 
     <?php  
-        if($_SESSION['user_role'] == "Member"){
+        if($_SESSION['user_role'] != "Admin"){
     ?>
         <!-- App Capsule -->
         <div id="appCapsule">
@@ -53,7 +53,7 @@ include "config/homeConfig.php"
                                     <div class="balance">
                                         <div class="left">
                                             <span class="title text-white">Total Balance</span>
-                                            <h1 class="total text-white">Rp<?= number_format($getWallet) ?></h1>
+                                            <h1 class="total text-white"><?= number_format($getWallet['user_saldo'],2) ?> USDT</h1>
                                         </div>
                                     </div>
                                     <!-- * Balance -->
@@ -103,12 +103,12 @@ include "config/homeConfig.php"
                                     <div class="balance">
                                         <div class="left">
                                             <span class="title text-white">Total Balance</span>
-                                            <h1 class="total text-white"><?= number_format(geSaldoCuan()['data'][0]['paket_nominal_cuan']) ?> CUAN</h1>
+                                            <h1 class="total text-white"><?= number_format($getWallet['user_saldo_token']) ?> Nexx</h1>
                                         </div>
                                         <div class="right">
-                                            <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#">
+                                            <!-- <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#">
                                                 <ion-icon name="arrow-down-outline"></ion-icon>
-                                            </a>
+                                            </a> -->
                                         </div>
                                     </div>
                                     <!-- * Balance -->
@@ -134,34 +134,40 @@ include "config/homeConfig.php"
                                 <form action="" method="post" enctype="multipart/form-data">
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label" for="bankAdminDepo">Akun Bank Admin</label>
-                                            <input type="text" class="form-control" placeholder="Enter an amount"
+                                            <label class="label" for="bankAdminDepo">Admin Wallet Address (BEP-20)</label>
+                                            <h5><?= $bankAdminDepo ?></h5>
+                                            <input type="hidden" class="form-control" placeholder="Enter an amount"
                                                 value="<?= $bankAdminDepo ?>" name="bankAdminDepo" id="bankAdminDepo" readonly>
                                         </div>
                                     </div>
 
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label" for="bankUserDepo">Akun Bank Anda</label>
-                                            <input type="text" class="form-control" placeholder="Enter an amount"
+                                            <label class="label" for="bankUserDepo">Your Wallet Address (BEP-20)</label>
+                                            <h5><?= $bankUserDepo ?></h5>
+                                            <input type="hidden" class="form-control" placeholder="Enter an amount"
                                                 value="<?= $bankUserDepo ?>" name="bankUserDepo" id="bankUserDepo" readonly>
                                         </div>
                                     </div>                                
 
                                     <div class="form-group basic">
-                                        <label class="label" for="bukti_tf">Bukti Transfer</label>
+                                        <label class="label" for="bukti_tf">Transaction Number</label>
                                         <div class="input-group mb-2">
-                                            <input type="file" class="form-control" name="bukti_tf" id="bukti_tf">
+                                            <input type="text" class="form-control" name="bukti_tf" id="bukti_tf" placeholder="Enter transaction number">
                                         </div>
                                     </div>
 
                                     <div class="form-group basic">
                                         <label class="label" for="jumlahDepo">Enter Amount</label>
                                         <div class="input-group mb-2">
-                                            <span class="input-group-text" id="basic-addona1">Rp</span>
                                             <input type="number" class="form-control" placeholder="Enter an amount"
                                                 value="0" name="jumlahDepo" id="jumlahDepo">
+                                            <span class="input-group-text" id="basic-addona1">USDT</span>
                                         </div>
+                                    </div>
+
+                                    <div class="text-left" style="font-size: smaller;">
+                                        Before confirming your transaction, please ensure that your wallet address matches the recipient address of your transaction. Incorrect addresses may result in the loss of funds.
                                     </div>
 
                                     <script>
@@ -192,6 +198,7 @@ include "config/homeConfig.php"
                         <div class="modal-body">
                             <div class="action-sheet-content">
                                 <form method="post" action="">
+
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="bankUserWd">Akun Bank</label>
@@ -203,44 +210,48 @@ include "config/homeConfig.php"
                                     <div class="form-group basic">
                                         <label class="label" for="mount">Enter Amount</label>
                                         <div class="input-group mb-2">
-                                            <span class="input-group-text" id="basic-addonb1">Rp</span>
                                             <input type="number" class="form-control" placeholder="Enter an amount"
                                                 value="0" name="mount" id="mount" onkeyup="calculate(this.value)">
+                                            <span class="input-group-text" id="basic-addonb1">USDT</span>
                                         </div>
-                                        <div class="input-info">Saldo: Rp<?= number_format($getWallet) ?></div>
-                                        <div class="input-info">Minumum WD: Rp<?= number_format($minWD) ?></div>
+                                        <div class="input-info">Saldo: <?= number_format($getWallet['user_saldo']) ?> USDT</div>
+                                        <div class="input-info">Minumum WD: <?= number_format($minWD) ?> USDT</div>
                                     </div>
 
                                     <div class="form-group basic">
                                         <label class="label" for="admin">Fee Admin</label>
                                         <div class="input-group mb-2">
                                             <input type="number" readonly step="0.0001" class="form-control" placeholder="Enter an amount"
-                                                value="<?= number_format(($feeWD * 100),1) ?>" name="admin" id="admin">
-                                            <span class="input-group-text" id="basic-addonb1">%</span>
+                                                value="<?= $feeWD ?>" name="admin" id="admin">
+                                            <span class="input-group-text" id="basic-addonb1">USDT</span>
                                         </div>
                                     </div>
 
                                     <div class="form-group basic">
                                         <label class="label" for="payout">Total Payout</label>
-                                        <input type="text" readonly class="form-control" placeholder="Enter an amount"
-                                            value="Rp 0" name="payout" id="payout">
+                                        <div class="input-group mb-2">
+                                            <input type="text" readonly class="form-control" placeholder="Enter an amount"
+                                                value="0" name="payout" id="payout">
+                                            <span class="input-group-text" id="basic-addonb1">USDT</span>
+                                        </div>
                                     </div>
+
                                     <script>
                                         function calculate(amount){
-                                            if(amount == ""){
+                                            if(amount == "" || amount <= 0){
                                                 document.getElementById("payout").value = "0";
                                             }else{
                                                 const biayaAdmin = parseFloat("<?= $feeWD ?>");
-                                                const payout = amount - (amount * biayaAdmin);
+                                                const payout = amount - biayaAdmin;
 
                                                 // Format Rupiah
                                                 const formatter = new Intl.NumberFormat('id-ID', {
                                                     style: 'currency',
-                                                    currency: 'IDR',
+                                                    currency: 'USD',
                                                     minimumFractionDigits: 0 // Opsional: tidak menampilkan desimal
                                                 });
 
-                                                document.getElementById("payout").value = formatter.format(payout);
+                                                document.getElementById("payout").value = formatter.format(payout).replace("US$", "");
                                             }
                                         }
                                         function loadingForm() {
@@ -248,10 +259,12 @@ include "config/homeConfig.php"
                                             document.getElementById("loader").style.display  = "";
                                         }
                                     </script>
+
                                     <div class="form-group basic">
                                         <button type="submit" name="withdraw" onclick="loadingForm()" class="btn btn-success btn-block btn-lg"
                                             data-bs-dismiss="modal">Withdraw</button>
                                     </div>
+
                                 </form>
                             </div>
                         </div>
@@ -268,13 +281,13 @@ include "config/homeConfig.php"
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #2bcf3a, #19ca4b, #05c459, #00be65, #00b86e);">
                             <div class="title text-white">Profit</div>
-                            <div class="value text-white" style="font-size: large;">Rp <?= getSumProfit() ?></div>
+                            <div class="value text-white" style="font-size: large;"><?= getSumProfit() ?> USDT</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #009ccc, #0097d2, #0092d8, #008cdd, #0085e0);">
                             <div class="title text-white">Bonus</div>
-                            <div class="value text-white" style="font-size: large;">Rp <?= getSumBonus() ?></div>
+                            <div class="value text-white" style="font-size: large;"><?= getSumBonus() ?> USDT</div>
                         </div>
                     </div>
                 </div>
@@ -295,14 +308,13 @@ include "config/homeConfig.php"
                 </div>
             </div>
             <!-- * Stats -->
-            <div class="section mt-3">
+            <!-- <div class="section mt-3">
                 <div class="card card-with-icon">
                     <div class="card-body pt-3 pb-3 text-center">
                         <div class="card-icon bg-danger mb-2">
                             <ion-icon name="link"></ion-icon>
                         </div>
                         <h3 class="card-titlde mb-1">M-PLAN CuanTube</h3>
-                        <!-- <p>Kode Referral: <span class="badge badge-danger"><?= $_SESSION['user_ads'] ?></span></p> -->
                         <div class="row">
                             <div class="col">
                                 <a href="mplen" class="btn btn-danger">
@@ -312,22 +324,25 @@ include "config/homeConfig.php"
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <?php  
             if(!isset($_GET['iklan'])){
             ?>
             <!-- Transactions -->
             <div class="section mt-4">
                 <?php  
+                    // $expiredMembership = 30*24*60*60*1000;
+                    // if($dateNowMilis <= $expiredMembership){
                     $paket = getPaketUser();
                     $userAds = $_SESSION['user_ads'];
                     if($paket['row'] > 0){
-                        foreach($paket['data'] as $row){
-                            // tgl pengisian
-                            $PaketName = $row['paket_name'];
-                            $date = $row['paket_ads_stop_date'] - (1*24*60*60*1000);
-                            $paketId = $row['paket_id'];
-                            $jumlahAds = $row['paket_jumlah_tugas'];
+                        if(!isLimitProfit($userAds)){
+                            foreach($paket['data'] as $row){
+                                // tgl pengisian
+                                $PaketName = $row['paket_name'];
+                                $date = $row['paket_ads_stop_date'] - (1*24*60*60*1000);
+                                $paketId = $row['paket_id'];
+                                $jumlahAds = $row['paket_jumlah_tugas'];
                 ?>
                 <div class="section-heading">
                     <h2 class="title">Tugas <?= $PaketName ?></h2>
@@ -341,7 +356,7 @@ include "config/homeConfig.php"
                                 
                     ?>
                     <!-- item -->
-                    <a href="?iklan=<?= $adsDataUser['ads_id'] ?>" class="item">
+                    <a href="?iklan=<?= $adsDataUser['ads_id'] ?>&type=premium" class="item">
                         <div class="detail">
                             <img src="assets/img/sample/brand/yt.png" alt="img" class="image-block imaged w48">
                             <div>
@@ -350,13 +365,14 @@ include "config/homeConfig.php"
                             </div>
                         </div>
                         <div class="right">
-                            <div class="price text-success">Rp<?= number_format($adsDataUser['ads_reward']) ?></div>
+                            <div class="price text-success"><?= number_format($adsDataUser['ads_reward'],2) ?> USDT</div>
                         </div>
                     </a>
                     <!-- * item -->
                     
                     <?php  
                             }
+                        
                         }else{
                             echo '<div class="text-center">Ads not found</div>';
                         }
@@ -365,10 +381,66 @@ include "config/homeConfig.php"
                 <hr>
                 
                 <?php  
+                            }
+                        }else{
+                            echo '
+                                <div class="card card-with-icon mb-3">
+                                    <div class="card-body pt-3 pb-3 text-center">
+                                        <div class="card-icon bg-danger mb-2">
+                                            <ion-icon name="trash-bin-outline"></ion-icon>
+                                        </div>
+                                        <h3 class="card-titlde mb-1">Paket Premium Anda telah Mencapai Limit</h3>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a href="paket" class="btn btn-danger">
+                                            Buy Now
+                                        </a>
+                                    </div>
+                                </div>
+                            ';
                         }
-                    }
-                
+                    }else{
+                        $paketBaic = getPaketBasicUser();
+                        $PaketName = $paketBaic['data'][0]['paket_name'];
+                        $date = $paketBaic['data'][0]['paket_ads_stop_date'] - (1*24*60*60*1000);
+                        $paketId = $paketBaic['data'][0]['paket_id'];
+                        $jumlahAds = $paketBaic['data'][0]['paket_jumlah_tugas'];
                 ?>
+                        <div class="section-heading">
+                            <h2 class="title">Tugas <?= $PaketName ?></h2>
+                            <!-- <a href="app-transactions.html" class="link">View All</a> -->
+                        </div>
+                        <div class="transactions mb-3">
+                            <?php  
+                                $data = $adsBasicUserTableClass->selectAds("ads_id, ads_name, ads_reward", "ads_status = 'Aktif' AND ads_paket_id = '$paketId' AND ads_user_id = '$userAds' AND ads_date = '$date' ORDER BY ads_date DESC LIMIT $jumlahAds");
+                                if($data['row'] > 0){
+                                    foreach($data['data'] as $adsDataUser){
+                                        
+                            ?>
+                            <!-- item -->
+                            <a href="?iklan=<?= $adsDataUser['ads_id'] ?>&type=basic" class="item">
+                                <div class="detail">
+                                    <img src="assets/img/sample/brand/yt.png" alt="img" class="image-block imaged w48">
+                                    <div>
+                                        <strong><?= $adsDataUser['ads_name'] ?></strong>
+                                        <p>Klik</p>
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <div class="price text-success"><?= number_format($adsDataUser['ads_reward']) ?> Nexx</div>
+                                </div>
+                            </a>
+                            <!-- * item -->
+                            
+                            <?php  
+                                    }
+                                }else{
+                                    echo '<div class="text-center">Ads not found</div>';
+                                }
+                            ?>
+                        </div>
+                <hr>
+                <?php } ?>
             </div>
             <!-- * Transactions -->
             <?php 
@@ -386,10 +458,11 @@ include "config/homeConfig.php"
                     </div>
                     <div class="card-body">
                         <input type="hidden" name="adsID" value="<?= $_GET['iklan'] ?>">
+                        <input type="hidden" name="adsType" value="<?= $_GET['type'] ?>">
         
                         <!-- YouTube Video Embed -->
                         <div class="video-wrapper">
-                            <iframe id="ytplayer" type="text/html" width="100%" height="360" src="https://www.youtube.com/embed/<?= $get_array ?>?enablejsapi=1&controls=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" frameborder="0"></iframe>
+                            <iframe id="ytplayer" type="text/html" width="100%" height="360" src="https://www.youtube.com/embed/<?= $get_array ?>?enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" frameborder="0"></iframe>
                         </div>
                         <script>
                             var player;
@@ -429,6 +502,8 @@ include "config/homeConfig.php"
             <!-- YouTube IFrame API Script -->
             <script src="https://www.youtube.com/iframe_api"></script>
             <?php } ?>
+
+
 
             <!-- ios style 16 -->
             <div id="alertdanger" class="notification-box">
@@ -528,7 +603,7 @@ include "config/homeConfig.php"
                     <div class="balance">
                         <div class="left">
                             <span class="title text-white">Omset Bulan Ini</span>
-                            <h1 class="total text-white">Rp<?= number_format(omsetMounth()['data'][0]['total']) ?></h1>
+                            <h1 class="total text-white"><?= number_format(omsetMounth()) ?> USDT</h1>
                         </div>
                     </div>
                     <!-- * Balance -->
@@ -542,13 +617,13 @@ include "config/homeConfig.php"
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #2bcf3a, #19ca4b, #05c459, #00be65, #00b86e);">
                             <div class="title text-white">Deposit</div>
-                            <div class="value text-white" style="font-size: large;">Rp<?= number_format(depoMounth()['data'][0]['total']) ?></div>
+                            <div class="value text-white" style="font-size: large;"><?= number_format(depoMounth()['data'][0]['total']) ?> USDT</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #009ccc, #0097d2, #0092d8, #008cdd, #0085e0);">
                             <div class="title text-white">Withdraw</div>
-                            <div class="value text-white" style="font-size: large;">Rp<?= number_format(wdMounth()['data'][0]['total']) ?></div>
+                            <div class="value text-white" style="font-size: large;"><?= number_format(wdMounth()['data'][0]['total']) ?> USDT</div>
                         </div>
                     </div>
                 </div>
@@ -556,7 +631,7 @@ include "config/homeConfig.php"
             <!-- * Stats -->
 
             <div class="section mt-2">
-                <div class="section-title">Pembelian Paket</div>
+                <div class="section-title">Pembelian Paket Premium</div>
                 <div class="card">
                     <div class="table-responsive">
                         <table class="table">
@@ -580,7 +655,7 @@ include "config/homeConfig.php"
                                     <th><?= $row['date'] ?></th>
                                     <td><?= memberName($row['paket_user_id']) ?></td>
                                     <td><?= $row['paket_name'] ?></td>
-                                    <td class="text-end text-primary">Rp<?= number_format($row['paket_nominal']) ?></td>
+                                    <td class="text-end text-primary"><?= number_format($row['paket_nominal']) ?> USDT</td>
                                 </tr>
                                 <?php 
                                         }

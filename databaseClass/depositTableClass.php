@@ -61,7 +61,7 @@ class depositTableClass extends connMySQLClass{
     public function selectAllTr($start, $end, $user){
         $sql = "SELECT 
                 profit_nominal AS nominal, 
-                'profit' AS keterangan,
+                'profit basic' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_profit_user
@@ -69,13 +69,27 @@ class depositTableClass extends connMySQLClass{
                 (
                     DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$start 00:00:00' AND 
                     DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$end 23:59:59'
-                ) AND profit_user_id = '$user'
+                ) AND profit_user_id = '$user' AND profit_type = 'Basic'
+            
+            UNION ALL 
+
+            SELECT 
+                profit_nominal AS nominal, 
+                'profit premium' AS keterangan,
+                DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
+            FROM 
+                trasaction_profit_user
+            WHERE 
+                (
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$start 00:00:00' AND 
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$end 23:59:59'
+                ) AND profit_user_id = '$user' AND profit_type = 'Premium'
             
             UNION ALL 
             
             SELECT 
                 bonus_nominal AS nominal, 
-                'bonus' AS keterangan ,
+                'bonus sponsor' AS keterangan ,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_bonus_user 
@@ -88,8 +102,22 @@ class depositTableClass extends connMySQLClass{
             UNION ALL 
             
             SELECT 
+                bonus_nominal AS nominal, 
+                'bonus matching' AS keterangan ,
+                DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
+            FROM 
+                trasaction_bonus_matching_user 
+            WHERE 
+                (
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$start 00:00:00' AND 
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$end 23:59:59'
+                ) AND bonus_user_id = '$user'
+            
+            UNION ALL 
+            
+            SELECT 
                 paket_nominal AS nominal, 
-                'paket' AS keterangan,
+                'paket premium' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date 
             FROM 
                 trasaction_paket_user 
@@ -98,6 +126,20 @@ class depositTableClass extends connMySQLClass{
                     DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$start 00:00:00' AND 
                     DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$end 23:59:59'
                 ) AND paket_user_id = '$user'
+            
+            UNION ALL 
+            
+            SELECT 
+                paket_nominal AS nominal, 
+                'paket membership' AS keterangan,
+                DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date 
+            FROM 
+                trasaction_paket_non_premium_user 
+            WHERE 
+                (
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') >= '$start 00:00:00' AND 
+                    DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i:%s') <= '$end 23:59:59'
+                ) AND paket_user_id = '$user' AND paket_name <> 'Free'
             
             UNION ALL 
             

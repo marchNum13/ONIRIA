@@ -9,7 +9,7 @@ include "config/memberConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>CuanTube - Member</title>
+    <title>Oniria - Member</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -76,7 +76,7 @@ include "config/memberConfig.php"
                                 <td>
                                     <?= memberName($row['user_upline']) ?>
                                 </td>
-                                <td class="text-end text-primary">Rp<?= number_format(getWallet($row['user_refferal'])) ?></td>
+                                <td class="text-end text-primary"><strong><?= number_format(getWallet($row['user_refferal']),2) ?> USDT</strong></td>
                             </tr>
                             <?php  
                                     }

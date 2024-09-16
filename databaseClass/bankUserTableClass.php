@@ -13,9 +13,9 @@ class bankUserTableClass extends connMySQLClass{
             $sql = "CREATE TABLE $this->table_name (
                 id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 bank_user_refferal VARCHAR(7) NOT NULL UNIQUE,
-                bank_user_account_name VARCHAR(250) NOT NULL,
-                bank_user_name VARCHAR(250) NOT NULL,
-                bank_user_number VARCHAR(250) NOT NULL
+                bank_user_account_name VARCHAR(250) NOT NULL DEFAULT 'empty',
+                bank_user_name VARCHAR(250) NOT NULL DEFAULT 'empty',
+                bank_user_number TEXT NOT NULL
             )";
             // EXECUTE THE QUERY TO CREATE TABLE
             $this->dbConn()->query($sql);
