@@ -80,7 +80,7 @@ include "config/homeConfig.php"
                                                 <div class="icon-wrapper bg-success">
                                                     <ion-icon name="gift-outline"></ion-icon>
                                                 </div>
-                                                <strong class="text-white">Paket</strong>
+                                                <strong class="text-white">Package</strong>
                                             </a>
                                         </div>
                                         <div class="item">
@@ -88,7 +88,7 @@ include "config/homeConfig.php"
                                                 <div class="icon-wrapper bg-warning">
                                                     <ion-icon name="swap-vertical"></ion-icon>
                                                 </div>
-                                                <strong class="text-white">Transaksi</strong>
+                                                <strong class="text-white">Transaction</strong>
                                             </a>
                                         </div>
                 
@@ -201,7 +201,7 @@ include "config/homeConfig.php"
 
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label" for="bankUserWd">Akun Bank</label>
+                                            <label class="label" for="bankUserWd">Your Wallet Address (BEP-20)</label>
                                             <input type="text" class="form-control" placeholder="Enter an amount"
                                                 value="<?= $bankUserWd ?>" name="bankUserWd" id="bankUserWd" readonly>
                                         </div>
@@ -214,8 +214,8 @@ include "config/homeConfig.php"
                                                 value="0" name="mount" id="mount" onkeyup="calculate(this.value)">
                                             <span class="input-group-text" id="basic-addonb1">USDT</span>
                                         </div>
-                                        <div class="input-info">Saldo: <?= number_format($getWallet['user_saldo']) ?> USDT</div>
-                                        <div class="input-info">Minumum WD: <?= number_format($minWD) ?> USDT</div>
+                                        <div class="input-info">Balance: <?= number_format($getWallet['user_saldo']) ?> USDT</div>
+                                        <div class="input-info">Min WD: <?= number_format($minWD) ?> USDT</div>
                                     </div>
 
                                     <div class="form-group basic">
@@ -280,14 +280,28 @@ include "config/homeConfig.php"
                 <div class="row mt-2">
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #2bcf3a, #19ca4b, #05c459, #00be65, #00b86e);">
-                            <div class="title text-white">Profit</div>
-                            <div class="value text-white" style="font-size: large;"><?= getSumProfit() ?> USDT</div>
+                            <div class="title text-white">Profit Basic</div>
+                            <div class="value text-white" style="font-size: large;"><?= getSumProfitBasic() ?> Nexx</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #009ccc, #0097d2, #0092d8, #008cdd, #0085e0);">
-                            <div class="title text-white">Bonus</div>
+                            <div class="title text-white">Profit Premium</div>
+                            <div class="value text-white" style="font-size: large;"><?= getSumProfit() ?> USDT</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <div class="stat-box" style="background-image: linear-gradient(to right top, #581ae9, #0050e4, #0060c8, #00659f, #2f6578);">
+                            <div class="title text-white">Bonus Provider</div>
                             <div class="value text-white" style="font-size: large;"><?= getSumBonus() ?> USDT</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-box" style="background-image: linear-gradient(to right top, #f28d0a, #f78028, #f9743a, #f8694a, #f46059);">
+                            <div class="title text-white">Bonus Matching</div>
+                            <div class="value text-white" style="font-size: large;"><?= getSumBonusMatching() ?> USDT</div>
                         </div>
                     </div>
                 </div>
@@ -295,14 +309,14 @@ include "config/homeConfig.php"
                     <?php $adsTotal = totalAds() ?>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #fd731a, #ff6732, #fd5c44, #fa5354, #f34d62);">
-                            <div class="title text-white">Ads Harian</div>
-                            <div class="value text-white"><?= $adsTotal['total'] ?></div>
+                            <div class="title text-white">Daily Video</div>
+                            <div class="value text-white"><?= $adsTotal['total'] ?> Video</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #fd1a1a, #fc0032, #f70045, #f10056, #e80065);">
-                            <div class="title text-white">Sisa Ads</div>
-                            <div class="value text-white"><?= $adsTotal['sisa'] ?></div>
+                            <div class="title text-white">Unwatched Video</div>
+                            <div class="value text-white"><?= $adsTotal['sisa'] ?> Video</div>
                         </div>
                     </div>
                 </div>
@@ -345,7 +359,7 @@ include "config/homeConfig.php"
                                 $jumlahAds = $row['paket_jumlah_tugas'];
                 ?>
                 <div class="section-heading">
-                    <h2 class="title">Tugas <?= $PaketName ?></h2>
+                    <h2 class="title">Task <?= $PaketName ?></h2>
                     <!-- <a href="app-transactions.html" class="link">View All</a> -->
                 </div>
                 <div class="transactions mb-3">
@@ -361,7 +375,7 @@ include "config/homeConfig.php"
                             <img src="assets/img/sample/brand/yt.png" alt="img" class="image-block imaged w48">
                             <div>
                                 <strong><?= $adsDataUser['ads_name'] ?></strong>
-                                <p>Klik</p>
+                                <p>Click</p>
                             </div>
                         </div>
                         <div class="right">
@@ -374,7 +388,7 @@ include "config/homeConfig.php"
                             }
                         
                         }else{
-                            echo '<div class="text-center">Ads not found</div>';
+                            echo '<div class="text-center">Video not found</div>';
                         }
                     ?>
                 </div>
@@ -389,7 +403,7 @@ include "config/homeConfig.php"
                                         <div class="card-icon bg-danger mb-2">
                                             <ion-icon name="trash-bin-outline"></ion-icon>
                                         </div>
-                                        <h3 class="card-titlde mb-1">Paket Premium Anda telah Mencapai Limit</h3>
+                                        <h3 class="card-titlde mb-1">Your Premium Package has Reached Its Limit</h3>
                                     </div>
                                     <div class="card-footer text-center">
                                         <a href="paket" class="btn btn-danger">
@@ -407,7 +421,7 @@ include "config/homeConfig.php"
                         $jumlahAds = $paketBaic['data'][0]['paket_jumlah_tugas'];
                 ?>
                         <div class="section-heading">
-                            <h2 class="title">Tugas <?= $PaketName ?></h2>
+                            <h2 class="title">Task <?= $PaketName ?></h2>
                             <!-- <a href="app-transactions.html" class="link">View All</a> -->
                         </div>
                         <div class="transactions mb-3">
@@ -423,7 +437,7 @@ include "config/homeConfig.php"
                                     <img src="assets/img/sample/brand/yt.png" alt="img" class="image-block imaged w48">
                                     <div>
                                         <strong><?= $adsDataUser['ads_name'] ?></strong>
-                                        <p>Klik</p>
+                                        <p>Click</p>
                                     </div>
                                 </div>
                                 <div class="right">
@@ -435,7 +449,7 @@ include "config/homeConfig.php"
                             <?php  
                                     }
                                 }else{
-                                    echo '<div class="text-center">Ads not found</div>';
+                                    echo '<div class="text-center">Video not found</div>';
                                 }
                             ?>
                         </div>
@@ -569,13 +583,13 @@ include "config/homeConfig.php"
             <a href="paket" class="item">
                 <div class="col">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
-                    <strong>Paket</strong>
+                    <strong>Package</strong>
                 </div>
             </a>
             <a href="transaksi" class="item">
                 <div class="col">
                     <ion-icon name="swap-horizontal"></ion-icon>
-                    <strong>Transaksi</strong>
+                    <strong>Transaction</strong>
                 </div>
             </a>
             <a href="referral" class="item">
@@ -587,7 +601,7 @@ include "config/homeConfig.php"
             <a href="app-settings" class="item">
                 <div class="col">
                     <ion-icon name="person-outline"></ion-icon>
-                    <strong>Profil</strong>
+                    <strong>Profile</strong>
                 </div>
             </a>
         </div>

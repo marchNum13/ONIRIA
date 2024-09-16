@@ -55,23 +55,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     if($updateCode){
                         $sendEmail = sendEmail($email, $codeOTP);
                         if($sendEmail){
-                            $alert_success = "Email terkirim, check Email anda!";
+                            $alert_success = "Your OTP code has been sent. Please check your email!";
                         }else{
                             sleep(2);
-                            $alert_error = "Email gagal dikirim.";
+                            $alert_error = "OTP code failed to send.";
                         }
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Informasi Akun tidak ditemukan.";
+                    $alert_error = "We couldn't find your account information.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Data tidak boleh kosong.";
+                $alert_error = "This field is required.";
             }
         }else{
             sleep(2);
-            $alert_error = "Verifikasi reCAPTCHA gagal!";
+            $alert_error = "reCAPTCHA verification failed!";
         }
     }
 }
@@ -79,11 +79,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 function sendEmail($emailDestination, $codeOTP){
     $memberName = explode("@", $emailDestination)[0];
     $url = "https://adventureclick.site/reset-password?email=" . $emailDestination . "&v=" . password_hash($codeOTP, PASSWORD_DEFAULT);
-    $subject = 'Reset Password akun AdVenture!';
+    $subject = 'Reset Password Account!';
     $message = '<html>
                     <body>
-                    <h4>Pesan Rahasia!</h4>
-                    <p>Klik url untuk mengubah password anda: ' . $url . '</p>
+                    <h4>Confidential Message!</h4>
+                    <p>Click the URL to reset your password: ' . $url . '</p>
                     </body>
                 </html>';
 

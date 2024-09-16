@@ -49,16 +49,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION['login_ads'] = true;
                             $_SESSION['user_ads'] = $loginUsername['user_id'];
                             $_SESSION['user_role'] = $loginUsername['role'];
-                            $_SESSION['alert_success'] = "Anda berhasil masuk.";
+                            $_SESSION['alert_success'] = "Login successful!";
                             header('Location: home');
                             exit();
                         }else{
                             sleep(2);
-                            $alert_error = "Informasi Akun tidak ditemukan.";
+                            $alert_error = "We couldn't find your account information.";
                         }
                     }else{
                         sleep(2);
-                        $alert_error = "Informasi Akun tidak ditemukan.";
+                        $alert_error = "We couldn't find your account information.";
                     }
                 }else{
                     $loginEmail = $userTableClass->loginMember($usernameOrEmail, "email");
@@ -70,29 +70,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                                 $_SESSION['login_ads'] = true;
                                 $_SESSION['user_ads'] = $loginEmail['user_id'];
                                 $_SESSION['user_role'] = $loginEmail['role'];
-                                $_SESSION['alert_success'] = "Anda berhasil masuk.";
+                                $_SESSION['alert_success'] = "Login successful!";
                                 header('Location: home');
                                 exit();
                             }else{
                                 sleep(2);
-                                $alert_error = "Informasi Akun tidak ditemukan.";
+                                $alert_error = "We couldn't find your account information.";
                             }
                         }else{
                             sleep(2);
-                            $alert_error = "Informasi Akun tidak ditemukan.";
+                            $alert_error = "We couldn't find your account information.";
                         }
                     }else{
                         sleep(2);
-                        $alert_error = "Informasi Akun tidak ditemukan.";
+                        $alert_error = "We couldn't find your account information.";
                     }
                 }
             }else{
                 sleep(2);
-                $alert_error = "Data tidak boleh kosong.";
+                $alert_error = "This field is required.";
             }
         }else{
             sleep(2);
-            $alert_error = "Verifikasi reCAPTCHA gagal!";
+            $alert_error = "reCAPTCHA verification failed!";
         }
     }
 }

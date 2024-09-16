@@ -8,7 +8,7 @@ include "config/resetConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>Oniria - Reset Password</title>
+    <title>Oniria - Change Password</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -108,7 +108,7 @@ include "config/resetConfig.php"
                         <div class="card-icon bg-danger mb-2">
                             <ion-icon name="power-outline"></ion-icon>
                         </div>
-                        <h3 class="card-titlde mb-1">SESI TELAH BERAKHIR</h3>
+                        <h3 class="card-titlde mb-1">"Session has ended."</h3>
                         <!-- <p>Kode Referral: <span class="badge badge-danger"><?= $_SESSION['user_ads'] ?></span></p> -->
                         <div class="row">
                             <div class="col">

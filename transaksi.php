@@ -8,7 +8,7 @@ include "config/transaksiConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>Oniria - Transaksi</title>
+    <title>Oniria - Transaction</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -38,7 +38,7 @@ include "config/transaksiConfig.php"
             </a>
         </div>
         <div class="pageTitle">
-            Transaksi
+            Transaction
         </div>
     </div>
     <!-- * App Header -->
@@ -48,8 +48,8 @@ include "config/transaksiConfig.php"
     <div id="appCapsule">
 
         <!-- Transactions -->
-        <div class="section mt-2">
-            <div class="section-title">Bulan Ini</div>
+        <div class="section mt-2 mb-3">
+            <div class="section-title">This Month</div>
             <div class="transactions">
                 <?php  
                     $userAds = $_SESSION['user_ads'];
@@ -61,7 +61,7 @@ include "config/transaksiConfig.php"
                     <div class="detail">
                         <div class="image-block imaged">
                         <?php  
-                        $plus = array('profit basic', 'profit premium', 'bonus sponsor', 'bonus matching', 'deposit');
+                        $plus = array('profit basic', 'profit premium', 'bonus provider', 'bonus matching', 'deposit');
                         $minus = array('paket premium', 'paket membership', 'withdraw');
                         $class = "";
                         $icon = "";
@@ -113,13 +113,13 @@ include "config/transaksiConfig.php"
         <a href="paket" class="item">
             <div class="col">
                 <ion-icon name="file-tray-full-outline"></ion-icon>
-                <strong>Paket</strong>
+                <strong>Package</strong>
             </div>
         </a>
         <a href="transaksi" class="item active">
             <div class="col">
                 <ion-icon name="swap-horizontal"></ion-icon>
-                <strong>Transaksi</strong>
+                <strong>Transaction</strong>
             </div>
         </a>
         <a href="referral" class="item">
@@ -131,7 +131,7 @@ include "config/transaksiConfig.php"
         <a href="app-settings" class="item">
             <div class="col">
                 <ion-icon name="person-outline"></ion-icon>
-                <strong>Profil</strong>
+                <strong>Profile</strong>
             </div>
         </a>
     </div>

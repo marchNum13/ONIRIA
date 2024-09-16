@@ -89,7 +89,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 bonus_nominal AS nominal, 
-                'bonus sponsor' AS keterangan ,
+                'bonus provider' AS keterangan ,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_bonus_user 

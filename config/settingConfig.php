@@ -21,7 +21,7 @@ if($settingBank['row'] > 0){
     $noBank = $settingBank['data'][0]['rek'];
     $previewBank = substr($noBank, 0, 4) . "****";
 }else{
-    $previewBank = "Belum diatur";
+    $previewBank = "Not yet set";
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -43,21 +43,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     );
                     if($updateEmail){
                         sleep(2);
-                        $_SESSION['alert_success'] = "Email anda berhasil diubah!";
+                        $_SESSION['alert_success'] = "Your email has been changed successfully!";
                         header("Location: app-settings");
                         exit();
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Email sudah terdaftar.";
+                    $alert_error = "This email address is already in use.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Password salah.";
+                $alert_error = "Wrong password.";
             }
         }else{
             sleep(2);
-            $alert_error = "Data tidak boleh kosong.";
+            $alert_error = "This field is required.";
         }
     }
     if(isset($_POST['simpanUbahUsername'])){
@@ -79,25 +79,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         );
                         if($updateUsername){
                             sleep(2);
-                            $_SESSION['alert_success'] = "Username anda berhasil diubah!";
+                            $_SESSION['alert_success'] = "Username has been changed successfully!";
                             header("Location: app-settings");
                             exit();
                         }
                     }else{
                         sleep(2);
-                        $alert_error = "Username sudah terdaftar.";
+                        $alert_error = "Username is already in use.";
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Password salah.";
+                    $alert_error = "Wrong password.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Username tidak boleh lebih dari 10 Karakter.";
+                $alert_error = "Username cannot exceed 10 characters.";
             }
         }else{
             sleep(2);
-            $alert_error = "Data tidak boleh kosong.";
+            $alert_error = "This field is required.";
         }
     }
     if(isset($_POST['ubahPassword'])){
@@ -114,21 +114,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     );
                     if($updatePassword){
                         sleep(2);
-                        $_SESSION['alert_success'] = "Password anda berhasil diubah!";
+                        $_SESSION['alert_success'] = "Ypur password has been changed successfully!";
                         header("Location: app-settings");
                         exit();
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Konfirmasi password tidak sama.";
+                    $alert_error = "Please make sure your passwords match. Your password and confirmation must be identical.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Password salah.";
+                $alert_error = "Wrong password.";
             }
         }else{
             sleep(2);
-            $alert_error = "Data tidak boleh kosong.";
+            $alert_error = "This field is required.";
         }
     }
     if(isset($_POST['simpanBank'])){
@@ -166,17 +166,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 }
                 if($updateBank){
                     sleep(2);
-                    $_SESSION['alert_success'] = "Akun bank anda berhasil diubah!";
+                    $_SESSION['alert_success'] = "Your Wallet address has been updated successfully!";
                     header("Location: app-settings");
                     exit();
                 }
             }else{
                 sleep(2);
-                $alert_error = "Password salah.";
+                $alert_error = "Wrong password";
             }
         }else{
             sleep(2);
-            $alert_error = "Data tidak boleh kosong.";
+            $alert_error = "This field is required.";
         }
     }
 }

@@ -313,8 +313,8 @@ include "config/settingConfig.php"
 
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="passwordbaru">Password Baru</label>
-                                        <input type="password" class="form-control" id="passwordbaru" name="passwordbaru" placeholder="Enter password baru" autocomplete="off">
+                                        <label class="label" for="passwordbaru">New Password</label>
+                                        <input type="password" class="form-control" id="passwordbaru" name="passwordbaru" placeholder="Enter new password" autocomplete="off">
                                         <i class="clear-input">
                                             <ion-icon name="close-circle"></ion-icon>
                                         </i>
@@ -323,8 +323,8 @@ include "config/settingConfig.php"
 
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="passwordkonfirm">Konfirmasi Password Baru</label>
-                                        <input type="password" class="form-control" id="passwordkonfirm" name="passwordkonfirm" placeholder="Enter konfirmasi password baru" autocomplete="off">
+                                        <label class="label" for="passwordkonfirm">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="passwordkonfirm" name="passwordkonfirm" placeholder="Confirm New Password" autocomplete="off">
                                         <i class="clear-input">
                                             <ion-icon name="close-circle"></ion-icon>
                                         </i>
@@ -414,7 +414,7 @@ include "config/settingConfig.php"
     <!-- * App Capsule -->
 
     <?php  
-        if($_SESSION['user_role'] == "Member"){
+        if($_SESSION['user_role'] != "Admin"){
     ?>
         <!-- App Bottom Menu -->
         <div class="appBottomMenu">
@@ -427,13 +427,13 @@ include "config/settingConfig.php"
             <a href="paket" class="item">
                 <div class="col">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
-                    <strong>Paket</strong>
+                    <strong>Package</strong>
                 </div>
             </a>
             <a href="transaksi" class="item">
                 <div class="col">
                     <ion-icon name="swap-horizontal"></ion-icon>
-                    <strong>Transaksi</strong>
+                    <strong>Transaction</strong>
                 </div>
             </a>
             <a href="referral" class="item">
@@ -445,7 +445,7 @@ include "config/settingConfig.php"
             <a href="app-settings" class="item active">
                 <div class="col">
                     <ion-icon name="person-outline"></ion-icon>
-                    <strong>Profil</strong>
+                    <strong>Profile</strong>
                 </div>
             </a>
         </div>
@@ -463,12 +463,6 @@ include "config/settingConfig.php"
                 <div class="col">
                     <ion-icon name="arrow-down-circle-outline"></ion-icon>
                     <strong>Withdraw</strong>
-                </div>
-            </a>
-            <a href="klaim" class="item">
-                <div class="col">
-                    <ion-icon name="file-tray-full-outline"></ion-icon>
-                    <strong>Klaim</strong>
                 </div>
             </a>
             <a href="deposit" class="item">

@@ -53,7 +53,7 @@ if($memberBank['row'] > 0){
     $noBank = $memberBank['data'][0]['bank_user_number'];
     $bankUserDepo = $bankUserWd = $memberBank['data'][0]['bank_user_number'];
 }else{
-    $bankUserDepo = $bankUserWd = "Belum diatur";
+    $bankUserDepo = $bankUserWd = "Not yet set";
 }
 
 $adminBank = adminBank();
@@ -69,7 +69,7 @@ if($adminBank['row'] > 0){
     $noBankAdmin = $adminBank['data'][0]['bank_admin_number'];
     $bankAdminDepo = $adminBank['data'][0]['bank_admin_number'];
 }else{
-    $bankAdminDepo = "Belum diatur";
+    $bankAdminDepo = "Not yet set";
 }
 
 $minWD = 20;
@@ -87,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $jumlahDepo = $_POST['jumlahDepo'] == "" ? "0" : trim(htmlspecialchars($_POST['jumlahDepo']));
             $depositDate = round(microtime(true) * 1000);
             // Validasi input
-            if($jumlahDepo > 0 && $bukti_tf != "" && $bankAdminDepo != "" && ($bankUserDepo != "" && $bankUserDepo != "Belum diatur")) {
+            if($jumlahDepo > 0 && $bukti_tf != "" && $bankAdminDepo != "" && ($bankUserDepo != "" && $bankUserDepo != "Not yet set")) {
                 $depositId = generateUniqueDepositId();
                 $fields = "deposit_id, deposit_user_id, deposit_nominal, deposit_bank_admin, deposit_bank_user, deposit_bukti, deposit_date";
                 $values = "'$depositId', '$userAds', '$jumlahDepo', '$bankAdminDepo', '$bankUserDepo', '$bukti_tf', '$depositDate'";
@@ -95,12 +95,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     sleep(2);
                     $userData = memberName($userAds);
                     sendMessage("depo", $userData, "", $jumlahDepo, "");
-                    $_SESSION['alert_success'] = "Deposit berhasil.";
+                    $_SESSION['alert_success'] = "Deposit successful!";
                     header("Location: home");
                     exit();
                 }else{
                     sleep(2);
-                    $alert_error = "Gagal menyimpan data.";
+                    $alert_error = "Data saving failed.";
                 }
                 // // Mengunggah bukti transfer
                 // $targetDir = "bukti_tf/";
@@ -122,11 +122,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 // }
             }else{
                 sleep(2);
-                $alert_error = "Data tidak boleh kosong.";
+                $alert_error = "This field is required.";
             }
         }else{
             sleep(2);
-            $alert_error = "Anda memiliki pending deposit.";
+            $alert_error = "You have a pending deposit";
         }
     }
     if(isset($_POST['withdraw'])){
@@ -141,60 +141,60 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $dateEnd = $checkPaketBasic['data'][0]['paket_date'] + (30*24*60*60*1000);
         }
         if($dateEnd >= $withdrawDate){
-            if($checkPaketBayar['data'][0]['paket_name'] != "Magang"){
-                $checkWd = $withdrawTableClass->selectWithdraw("withdraw_user_id", "withdraw_user_id = '$userAds' AND withdraw_status = 'Pending' LIMIT 1");
-                if($checkWd['row'] == 0){
-                    $bankUserWd = trim(htmlspecialchars($_POST['bankUserWd']));
-                    $mount = $_POST['mount'] == "" ? "0" : trim(htmlspecialchars($_POST['mount']));
-                    if($mount > 0){
-                        $saldo = getWallet()['user_saldo'];
-                        if($saldo >= $mount){
-                            if($mount >= $minWD){
-                                $wdId = generateUniqueWDId();
-            
-                                $fields = "withdraw_id, withdraw_user_id, withdraw_nominal, withdraw_fee_admin, withdraw_bank_user, withdraw_date";
-                                $values = "'$wdId', '$userAds', '$mount', $feeWD, '$bankUserWd', '$withdrawDate'";
-                                if($withdrawTableClass->insertWithdraw($fields, $values)) {
-                                    sleep(2);
-                                    $userData = memberName($userAds);
-                                    sendMessage("wd", $userData, "", $mount, "");
-                                    $_SESSION['alert_success'] = "Withdraw berhasil.";
-                                    header("Location: home");
-                                    exit();
-                                }else{
-                                    sleep(2);
-                                    $alert_error = "Gagal menyimpan penarikan.";
-                                }
-                                // $maxWd = $checkPaketBayar['data'][0]['paket_nominal'];
-                                // $sisaWd = sisaWD($userAds, $maxWd);
-                                // if($mount <= $sisaWd){
-                                // }else{
-                                //     sleep(2);
-                                //     $alert_error = "Sisa WD harian Rp" . number_format($sisaWd) . " (Max WD perhari Rp" . number_format($maxWd) . ")";
-                                // }
+            $checkWd = $withdrawTableClass->selectWithdraw("withdraw_user_id", "withdraw_user_id = '$userAds' AND withdraw_status = 'Pending' LIMIT 1");
+            if($checkWd['row'] == 0){
+                $bankUserWd = trim(htmlspecialchars($_POST['bankUserWd']));
+                $mount = $_POST['mount'] == "" ? "0" : trim(htmlspecialchars($_POST['mount']));
+                if($mount > 0){
+                    $saldo = getWallet()['user_saldo'];
+                    if($saldo >= $mount){
+                        if($mount >= $minWD){
+                            $wdId = generateUniqueWDId();
+        
+                            $fields = "withdraw_id, withdraw_user_id, withdraw_nominal, withdraw_fee_admin, withdraw_bank_user, withdraw_date";
+                            $values = "'$wdId', '$userAds', '$mount', $feeWD, '$bankUserWd', '$withdrawDate'";
+                            if($withdrawTableClass->insertWithdraw($fields, $values)) {
+                                sleep(2);
+                                $userData = memberName($userAds);
+                                sendMessage("wd", $userData, "", $mount, "");
+                                $_SESSION['alert_success'] = "Withdraw successful!";
+                                header("Location: home");
+                                exit();
                             }else{
                                 sleep(2);
-                                $alert_error = "Min WD Rp" . number_format($minWD);
+                                $alert_error = "Data saving failed.";
                             }
+                            // $maxWd = $checkPaketBayar['data'][0]['paket_nominal'];
+                            // $sisaWd = sisaWD($userAds, $maxWd);
+                            // if($mount <= $sisaWd){
+                            // }else{
+                            //     sleep(2);
+                            //     $alert_error = "Sisa WD harian Rp" . number_format($sisaWd) . " (Max WD perhari Rp" . number_format($maxWd) . ")";
+                            // }
                         }else{
                             sleep(2);
-                            $alert_error = "Saldo tidak cukup.";
+                            $alert_error = "Min WD " . number_format($minWD) . " USDT";
                         }
                     }else{
                         sleep(2);
-                        $alert_error = "Data tidak boleh kosong.";
+                        $alert_error = "You do not have enough balance.";
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Anda memiliki pending Withdraw.";
+                    $alert_error = "This field is required.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Minimal berlangganan 1 paket berbayar.";
+                $alert_error = "You have a pending Withdraw.";
             }
+            // if($checkPaketBayar['data'][0]['paket_name'] != "Magang"){
+            // }else{
+            //     sleep(2);
+            //     $alert_error = "Minimal berlangganan 1 paket berbayar.";
+            // }
         }else{
             sleep(2);
-            $alert_error = "Anda belum terdaftar sebagai membership.";
+            $alert_error = "You are not yet registered as a member.";
         }
     }
     if(isset($_POST['klaim'])){
@@ -247,7 +247,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if($updateWallet){
                                     // bonus upline
                                     sleep(2);
-                                    $_SESSION['alert_success'] = "Klaim berhasil.";
+                                    $_SESSION['alert_success'] = "Klaim successful!";
                                     header("Location: home");
                                     exit();
                                 }else{
@@ -268,7 +268,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Masa percoban anda telah berakhir.";
+                    $alert_error = "Your trial period is over.";
                 }
 
             }elseif($adsType == "premium"){
@@ -283,7 +283,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                         $nominalRW = $checkAds['data'][0]['ads_reward'];
                         if(isLimitProfit($userAds, $nominalRW)){
                             sleep(2);
-                            $alert_error = "Paket Premium Anda telah Mencapai Limit.";
+                            $alert_error = "Your Premium Package has Reached Its Limit";
                         }else{
                             $proftId = generateUniqueProfitId();
                             $insertProfit = $profitTableClass->insertProfit(
@@ -323,7 +323,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                                         $giveBonus = bonusUpline($userAds, $userAdsUpline, $lvl, $nominalRW, $dateNowUTC);
                                         if($giveBonus){
                                             sleep(2);
-                                            $_SESSION['alert_success'] = "Klaim berhasil.";
+                                            $_SESSION['alert_success'] = "Klaim successful!";
                                             header("Location: home");
                                             exit();
                                         }
@@ -346,7 +346,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Anda tidak terdaftar sebagai membership.";
+                    $alert_error = "You are not yet registered as a member.";
                 }
             }else{
                 sleep(2);
@@ -956,6 +956,15 @@ function getSumBonus(){
     );
     return number_format($data['data'][0]['total'],2);
 }
+function getSumBonusMatching(){
+    global $bonusMatchingTableClass;
+    $userAds = $_SESSION['user_ads'];
+    $data = $bonusMatchingTableClass->selectBonus(
+        fields:"SUM(bonus_nominal) total",
+        key:"bonus_user_id = '$userAds'"
+    );
+    return number_format($data['data'][0]['total'],2);
+}
 
 function getSumProfit(){
     global $profitTableClass;
@@ -963,6 +972,15 @@ function getSumProfit(){
     $data = $profitTableClass->selectProfit(
         fields:"SUM(profit_nominal) total",
         key:"profit_user_id = '$userAds' AND profit_type = 'Premium'"
+    );
+    return number_format($data['data'][0]['total'],2);
+}
+function getSumProfitBasic(){
+    global $profitTableClass;
+    $userAds = $_SESSION['user_ads'];
+    $data = $profitTableClass->selectProfit(
+        fields:"SUM(profit_nominal) total",
+        key:"profit_user_id = '$userAds' AND profit_type = 'Basic'"
     );
     return number_format($data['data'][0]['total'],2);
 }

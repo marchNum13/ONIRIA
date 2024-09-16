@@ -81,7 +81,7 @@ include "config/forgotConfig.php"
                     }
                 </script>
                 <div class="form-button-group transparent">
-                    <button type="submit" class="btn btn-success btn-block btn-lg" name="reset" onclick="loadingForm()">Reset Password</button>
+                    <button type="submit" class="btn btn-success btn-block btn-lg" name="reset" onclick="loadingForm()">Send</button>
                 </div>
 
             </form>

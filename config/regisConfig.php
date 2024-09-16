@@ -93,7 +93,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                                 if($insertBasicPaket){
                                     $usernameUpline = memberName($upline);
                                     sendMessage("regis", $username, $usernameUpline, "", "");
-                                    $_SESSION['alert_success'] = "Silahkan Login!";
+                                    $_SESSION['alert_success'] = "Log in now!";
                                     header("Location: index");
                                     exit();
                                 }
@@ -101,23 +101,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             }
                         }else{
                             sleep(2);
-                            $alert_error = "Refferal Code tidak ditemukan.";
+                            $alert_error = "Referral code not found.";
                         }
                     }else{
                         sleep(2);
-                        $alert_error = "Email sudah terdaftar.";
+                        $alert_error = "This email address is already in use.";
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Konfirmasi password tidak sama.";
+                    $alert_error = "Please make sure your passwords match. Your password and confirmation must be identical.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Data tidak boleh kosong.";
+                $alert_error = "This field is required.";
             }
         }else{
             sleep(2);
-            $alert_error = "Verifikasi reCAPTCHA gagal!";
+            $alert_error = "reCAPTCHA verification failed!";
         }
     }
 }

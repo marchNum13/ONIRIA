@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
 <title>Oniria</title>
-<meta name="description" content="Earn more money with ads">
+<meta name="description" content="Watch for earn">
 <meta name="keywords"
     content="Earn, Money, Game, Ads" />
 <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">

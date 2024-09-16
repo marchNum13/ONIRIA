@@ -91,7 +91,7 @@ include "config/loginConfig.php"
                     <div>
                         <a href="app-register">Register Now</a>
                     </div>
-                    <div><a href="forgot-password" class="text-muted">Forgot Password?</a></div>
+                    <!-- <div><a href="forgot-password" class="text-muted">Forgot Password?</a></div> -->
                 </div>
 
                 <div class="mt-3">

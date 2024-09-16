@@ -226,7 +226,7 @@ include "config/refferalConfig.php"
                     <div class="in">
                         <h3 class="subtitle">Messange</h3>
                         <div class="text">
-                            Link Berhasil Dicopy.
+                            The link has been copied to your clipboard.
                         </div>
                     </div>
                 </div>
@@ -247,13 +247,13 @@ include "config/refferalConfig.php"
         <a href="paket" class="item">
             <div class="col">
                 <ion-icon name="file-tray-full-outline"></ion-icon>
-                <strong>Paket</strong>
+                <strong>Package</strong>
             </div>
         </a>
         <a href="transaksi" class="item">
             <div class="col">
                 <ion-icon name="swap-horizontal"></ion-icon>
-                <strong>Transaksi</strong>
+                <strong>Transaction</strong>
             </div>
         </a>
         <a href="referral" class="item active">
@@ -265,7 +265,7 @@ include "config/refferalConfig.php"
         <a href="app-settings" class="item">
             <div class="col">
                 <ion-icon name="person-outline"></ion-icon>
-                <strong>Profil</strong>
+                <strong>Profile</strong>
             </div>
         </a>
     </div>

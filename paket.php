@@ -8,7 +8,7 @@ include "config/paketConfig.php"
 
 <head>
     <?php include "partial/meta.php" ?>
-    <title>Oniria - Paket</title>
+    <title>Oniria - Package</title>
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <?php $timestamp = time(); ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= $timestamp ?>">
@@ -39,7 +39,7 @@ include "config/paketConfig.php"
             </a>
         </div>
         <div class="pageTitle">
-            Paket
+            Package 
         </div>
     </div>
     <!-- * App Header -->
@@ -64,7 +64,7 @@ include "config/paketConfig.php"
                         <div class="card-icon bg-danger mb-2">
                             <ion-icon name="trash-bin-outline"></ion-icon>
                         </div>
-                        <h3 class="card-titlde mb-1">Anda tidak terdaftar dalam Membership atau masa Membership anda telah berakhir</h3>
+                        <h3 class="card-titlde mb-1">You are not registered as a member or your membership has expired.</h3>
                     </div>
                     <div class="card-footer text-center">
                         <a href="#" data-bs-toggle="modal" data-bs-target="#membership<?= $row['id'] ?>" class="btn btn-danger">
@@ -84,7 +84,7 @@ include "config/paketConfig.php"
                                 <form method="post" action="">
                                     <input type="hidden" name="namePaket" value="<?= $row['settings_nama_paket'] ?>">                                
                                     <h3><?= number_format($row['settings_harga_paket']) ?> USDT / 30 Hari</h3>
-                                    Bebas langganan paket premium <br>
+                                    Free premium package subscription.<br>
                                     <?= $row['settings_jumlah_tugas'] ?> Video Youtube
                                     <script>
                                         function loadingForm() {
@@ -120,7 +120,7 @@ include "config/paketConfig.php"
                     <div class="card-body">
                         <h3 class="card-title text-white"><?= number_format($row['settings_harga_paket']) ?> USDT</h3>
                         <p class="card-text text-white">
-                            Sponsor <?= $lvlReff ?> Lvl <br>
+                            Provider <?= $lvlReff ?> Lvl <br>
                             Matching <?= $lvlMaching ?> Lvl
                         </p>
                     </div>
@@ -174,7 +174,7 @@ include "config/paketConfig.php"
                         <div class="card-icon bg-danger mb-2">
                             <ion-icon name="trash-bin-outline"></ion-icon>
                         </div>
-                        <h3 class="card-titlde mb-1">Anda Sudah Membeli Paket</h3>
+                        <h3 class="card-titlde mb-1">You have purchased a package.</h3>
                     </div>
                 </div>
             </div>
@@ -245,13 +245,13 @@ include "config/paketConfig.php"
         <a href="paket" class="item active">
             <div class="col">
                 <ion-icon name="file-tray-full-outline"></ion-icon>
-                <strong>Paket</strong>
+                <strong>Package</strong>
             </div>
         </a>
         <a href="transaksi" class="item">
             <div class="col">
                 <ion-icon name="swap-horizontal"></ion-icon>
-                <strong>Transaksi</strong>
+                <strong>Transaction</strong>
             </div>
         </a>
         <a href="referral" class="item">
@@ -263,7 +263,7 @@ include "config/paketConfig.php"
         <a href="app-settings" class="item">
             <div class="col">
                 <ion-icon name="person-outline"></ion-icon>
-                <strong>Profil</strong>
+                <strong>Profile</strong>
             </div>
         </a>
     </div>

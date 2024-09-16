@@ -68,7 +68,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                                 sleep(2);
                                 $userBuy = memberName($userAds);
                                 sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
-                                $_SESSION['alert_success'] = "Membership anda telah aktif.";
+                                $_SESSION['alert_success'] = "Your membership has been activated.";
                                 header("Location: paket");
                                 exit();
                             }
@@ -94,7 +94,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                                 sleep(2);
                                 $userBuy = memberName($userAds);
                                 sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
-                                $_SESSION['alert_success'] = "Pembelian berhasil.";
+                                $_SESSION['alert_success'] = "Buy successful!";
                                 header("Location: paket");
                                 exit();
                             }
@@ -103,11 +103,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }else{
                 sleep(2);
-                $alert_error = "Saldo tidak cukup.";
+                $alert_error = "Balance is not enough.";
             }
         }else{
             sleep(2);
-            $alert_error = "Gagal melakukan pembelian.";
+            $alert_error = "The purchase was unsuccessful.";
         }
     }
 }

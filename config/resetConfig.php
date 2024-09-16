@@ -68,22 +68,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         );
                         if($updateCode){
                             sleep(2);
-                            $_SESSION['alert_success'] = "Reset password berhasil!";
+                            $_SESSION['alert_success'] = "Your password has been reset successfully!";
                             header("Location: home");
                             exit();
                         }
                     }
                 }else{
                     sleep(2);
-                    $alert_error = "Konfirmasi password tidak sama.";
+                    $alert_error = "Please make sure your passwords match. Your password and confirmation must be identical.";
                 }
             }else{
                 sleep(2);
-                $alert_error = "Data tidak boleh kosong.";
+                $alert_error = "This field is required.";
             }
         }else{
             sleep(2);
-            $alert_error = "Verifikasi reCAPTCHA gagal!";
+            $alert_error = "reCAPTCHA verification failed!";
         }
     }
 }
