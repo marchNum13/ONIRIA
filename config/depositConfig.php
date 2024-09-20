@@ -45,10 +45,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $updateDepo = $depositTableClass->updateDeposit("deposit_status = 'Success'", "deposit_id = '$idDepo' AND deposit_status = 'Pending'");
             if($updateDepo){
                 $user = $pendingDepoCheck['data'][0]['deposit_user_id'];
-                $saldoUser = getWallet($user);
-                $totalDepo = $pendingDepoCheck['data'][0]['deposit_nominal'];
-                $saldoNow = $saldoUser+$totalDepo;
-                $updateWallet = $walletUserTableClass->updateWalletUser("user_saldo = '$saldoNow'", "user_refferal = '$user'");
+                // $saldoUser = getWallet($user);
+                // $totalDepo = $pendingDepoCheck['data'][0]['deposit_nominal'];
+                // $saldoNow = $saldoUser+$totalDepo;
+                $updateWallet = true;;
                 if($updateWallet){
                     sleep(2);
                     $_SESSION['alert_success'] = "Konfirmasi deposit berhasil.";

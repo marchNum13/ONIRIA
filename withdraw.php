@@ -314,12 +314,12 @@ include "config/withdrawConfig.php"
                 <strong>Withdraw</strong>
             </div>
         </a>
-        <a href="klaim" class="item">
+        <!-- <a href="klaim" class="item">
             <div class="col">
                 <ion-icon name="file-tray-full-outline"></ion-icon>
                 <strong>Klaim</strong>
             </div>
-        </a>
+        </a> -->
         <a href="deposit" class="item">
             <div class="col">
                 <ion-icon name="arrow-up-circle-outline"></ion-icon>

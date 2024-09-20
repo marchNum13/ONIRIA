@@ -76,7 +76,7 @@ include "config/memberConfig.php"
                                 <td>
                                     <?= memberName($row['user_upline']) ?>
                                 </td>
-                                <td class="text-end text-primary"><strong><?= number_format(getWallet($row['user_refferal']),2) ?> USDT</strong></td>
+                                <td class="text-end text-primary"><strong><?= number_format(totalBalance($row['user_refferal']),2) ?> USDT</strong></td>
                             </tr>
                             <?php  
                                     }

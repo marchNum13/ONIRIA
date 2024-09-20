@@ -16,6 +16,8 @@ include "databaseClass/settingsBonusTableClass.php";
 include "databaseClass/bonusTableClass.php";
 include "databaseClass/bonusMatchingTableClass.php";
 include "databaseClass/profitTableClass.php";
+include "databaseClass/depositTableClass.php";
+include "databaseClass/withdrawTableClass.php";
 include "apiTele.php";
 
 $userTableClass = new userTableClass();
@@ -27,8 +29,11 @@ $settingsBonusTableClass = new settingsBonusTableClass();
 $bonusTableClass = new bonusTableClass();
 $bonusMatchingTableClass = new bonusMatchingTableClass();
 $profitTableClass = new profitTableClass();
+$withdrawTableClass = new withdrawTableClass();
+$depositTableClass = new depositTableClass();
 
 $dataPaket = dataPaket();
+$totalBalance = totalBalance();
 
 $alert_error = "";
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -48,7 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $rewardTiga = $checkPaket['data'][0]['settings_reward_tugas_tiga'];
             $jumlah = $checkPaket['data'][0]['settings_jumlah_tugas'];
             $estimasi = "Berbayar";
-            $saldo = getWallet();
+            $saldo = $totalBalance;
             if($saldo >= $nominal){
                 if($namePaket == "Membership"){
                     $idPaketBuy = generateUniquePaketBasicId();
@@ -59,18 +64,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if($insertBaicPaket){
                         $updateRole = $userTableClass->updateUser("user_role = 'Membership'", "user_refferal = '$userAds'");
                         if($updateRole){
-                            $saldoNow = $saldo - $nominal;
-                            $updateWallet = $walletUserTableClass->updateWalletUser(
-                                dataSet:"user_saldo = '$saldoNow'",
-                                key:"user_refferal = '$userAds'"
-                            );
+                            // $saldoNow = $saldo - $nominal;
+                            $updateWallet = true;
                             if($updateWallet){
-                                sleep(2);
-                                $userBuy = memberName($userAds);
-                                sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
-                                $_SESSION['alert_success'] = "Your membership has been activated.";
-                                header("Location: paket");
-                                exit();
+                                $userAdsUpline = getUser($userAds)['data'][0]['user_upline'];
+                                $lvl = 1;
+                                $giveBonus = bonusUpline($userAds, $userAdsUpline, $lvl, $nominal, $dateNow);
+                                if($giveBonus){
+                                    sleep(2);
+                                    $userBuy = memberName($userAds);
+                                    sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
+                                    $_SESSION['alert_success'] = "Your membership has been activated.";
+                                    header("Location: package");
+                                    exit();
+                                }
                             }
                         }
                     }
@@ -82,22 +89,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     );
                     if($insertBuyPaket){
                         $saldoNow = $saldo - $nominal;
-                        $updateWallet = $walletUserTableClass->updateWalletUser(
-                            dataSet:"user_saldo = '$saldoNow'",
-                            key:"user_refferal = '$userAds'"
-                        );
+                        $updateWallet = true;
                         if($updateWallet){
-                            $userAdsUpline = getUser($userAds)['data'][0]['user_upline'];
-                            $lvl = 1;
-                            $giveBonus = bonusUpline($userAds, $userAdsUpline, $lvl, $nominal, $dateNow);
-                            if($giveBonus){
-                                sleep(2);
-                                $userBuy = memberName($userAds);
-                                sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
-                                $_SESSION['alert_success'] = "Buy successful!";
-                                header("Location: paket");
-                                exit();
-                            }
+                            sleep(2);
+                            $userBuy = memberName($userAds);
+                            sendMessage("buyPaket", $userBuy, "", $nominal, $paket);
+                            $_SESSION['alert_success'] = "Buy successful!";
+                            header("Location: package");
+                            exit();
                         }                    
                     }
                 }
@@ -110,6 +109,62 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $alert_error = "The purchase was unsuccessful.";
         }
     }
+}
+
+function totalBalance(){
+
+    global $depositTableClass;
+    global $profitTableClass;
+    global $bonusTableClass;
+    global $bonusMatchingTableClass;
+    global $paketTableClass;
+    global $paketNonPremiumTableClass;
+    global $withdrawTableClass;
+    $userAds = $_SESSION['user_ads'];
+
+    $getDeposit = $depositTableClass->selectDeposit(
+        fields: "SUM(deposit_nominal) AS total", 
+        key: "deposit_user_id = '$userAds' AND deposit_status = 'Success'"
+    )['data'][0]['total'];
+    
+    $getProfit = $profitTableClass->selectProfit(
+        fields: "SUM(profit_nominal) AS total", 
+        key: "profit_user_id = '$userAds' AND profit_type = 'Premium'"
+    )['data'][0]['total'];
+    
+    $getBonusSponsor = $bonusTableClass->selectBonus(
+        fields: "SUM(bonus_nominal) AS total", 
+        key: "bonus_user_id = '$userAds'"
+    )['data'][0]['total'];
+    
+    $getBonusMatching = $bonusMatchingTableClass->selectBonus(
+        fields: "SUM(bonus_nominal) AS total", 
+        key: "bonus_user_id = '$userAds'"
+    )['data'][0]['total'];
+
+    $totalMasuk = $getDeposit + $getProfit + $getBonusSponsor + $getBonusMatching;
+    
+    $getPaket = $paketTableClass->selectPaket(
+        fields: "SUM(paket_nominal) AS total", 
+        key: "paket_user_id = '$userAds'"
+    )['data'][0]['total'];
+    
+    $getPaketBasic = $paketNonPremiumTableClass->selectPaket(
+        fields: "SUM(paket_nominal) AS total", 
+        key: "paket_user_id = '$userAds'"
+    )['data'][0]['total'];
+    
+    $getWithdraw = $withdrawTableClass->selectWithdraw(
+        fields: "SUM(withdraw_nominal) AS total", 
+        key: "withdraw_user_id = '$userAds' AND withdraw_status = 'Success'"
+    )['data'][0]['total'];
+
+    $totalKeluar = $getPaket + $getPaketBasic + $getWithdraw;
+
+    $result = $totalMasuk - $totalKeluar;
+
+    return $result;
+
 }
 
 function generateUniquePaketBasicId(){
@@ -258,7 +313,7 @@ function bonusUpline($userAds, $userAdsUpline, $lvl, $nominal, $dateNow){
                 if($paketBsicUpline['data'][0]['paket_name'] == "Free"){
                     $dateEnd = $paketBsicUpline['data'][0]['paket_date'] + (7*24*60*60*1000);
                 }elseif($paketBsicUpline['data'][0]['paket_name'] == "Membership"){
-                    $dateEnd = $paketBsicUpline['data'][0]['paket_date'] + (30*24*60*60*1000);
+                    $dateEnd = $paketBsicUpline['data'][0]['paket_date'] + (37*24*60*60*1000);
                 }
                 if($dateEnd < $dateNow){
                     return true;
@@ -270,15 +325,12 @@ function bonusUpline($userAds, $userAdsUpline, $lvl, $nominal, $dateNow){
                     );
                     $percenBonus = $getPercentBonus['data'][0]['percen'] / 100;
                     $totalBonus = $nominal * $percenBonus;
-                    $dataWalletUpline = $walletUserTableClass->selectWalletUser(
-                        fields:"user_saldo",
-                        key:"user_refferal = '$userAdsUpline'"
-                    );
-                    $saldoUpline = $dataWalletUpline['data'][0]['user_saldo'] + $totalBonus;
-                    $updateWalletUpline = $walletUserTableClass->updateWalletUser(
-                        dataSet:"user_saldo = '$saldoUpline'",
-                        key:"user_refferal = '$userAdsUpline'"
-                    );
+                    // $dataWalletUpline = $walletUserTableClass->selectWalletUser(
+                    //     fields:"user_saldo",
+                    //     key:"user_refferal = '$userAdsUpline'"
+                    // );
+                    // $saldoUpline = $dataWalletUpline['data'][0]['user_saldo'] + $totalBonus;
+                    $updateWalletUpline = true;
                     if($updateWalletUpline){
                         $bonusId = generateUniqueBonusId();
                         $strLVL = "LEVEL " . $lvl; 

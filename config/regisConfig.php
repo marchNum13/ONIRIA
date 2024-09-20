@@ -77,7 +77,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                                 // insertPaket basic
                                 $dataPaket = dataPaket();
                                 $dateNow = round(microtime(true) * 1000);
-                                $nominal = $dataPaket['settings_harga_paket'];
+                                $nominal = 0;
                                 $paket = "Free";
                                 $rewardSatu = $dataPaket['settings_reward_tugas_satu'];
                                 $rewardDua = $dataPaket['settings_reward_tugas_dua'];

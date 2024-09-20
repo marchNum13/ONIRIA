@@ -45,10 +45,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $updateWd = $withdrawTableClass->updateWithdraw("withdraw_status = 'Success'", "withdraw_id = '$idWd' AND withdraw_status = 'Pending'");
             if($updateWd){
                 $user = $pendingWdCheck['data'][0]['withdraw_user_id'];
-                $saldoUser = getWallet($user);
-                $totalWd = $pendingWdCheck['data'][0]['withdraw_nominal'];
-                $saldoNow = $saldoUser-$totalWd;
-                $updateWallet = $walletUserTableClass->updateWalletUser("user_saldo = '$saldoNow'", "user_refferal = '$user'");
+                // $saldoUser = getWallet($user);
+                // $totalWd = $pendingWdCheck['data'][0]['withdraw_nominal'];
+                // $saldoNow = $saldoUser-$totalWd;
+                $updateWallet = true;
                 if($updateWallet){
                     sleep(2);
                     $_SESSION['alert_success'] = "Konfirmasi withdraw berhasil.";

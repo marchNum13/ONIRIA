@@ -53,7 +53,7 @@ include "config/homeConfig.php"
                                     <div class="balance">
                                         <div class="left">
                                             <span class="title text-white">Total Balance</span>
-                                            <h1 class="total text-white"><?= number_format($getWallet['user_saldo'],2) ?> USDT</h1>
+                                            <h1 class="total text-white"><?= number_format($totalBalance,2) ?> USDT</h1>
                                         </div>
                                     </div>
                                     <!-- * Balance -->
@@ -214,7 +214,7 @@ include "config/homeConfig.php"
                                                 value="0" name="mount" id="mount" onkeyup="calculate(this.value)">
                                             <span class="input-group-text" id="basic-addonb1">USDT</span>
                                         </div>
-                                        <div class="input-info">Balance: <?= number_format($getWallet['user_saldo']) ?> USDT</div>
+                                        <div class="input-info">Balance: <?= number_format($totalBalance,2) ?> USDT</div>
                                         <div class="input-info">Min WD: <?= number_format($minWD) ?> USDT</div>
                                     </div>
 
@@ -580,13 +580,13 @@ include "config/homeConfig.php"
                     <strong>Home</strong>
                 </div>
             </a>
-            <a href="paket" class="item">
+            <a href="package" class="item">
                 <div class="col">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
                     <strong>Package</strong>
                 </div>
             </a>
-            <a href="transaksi" class="item">
+            <a href="transaction" class="item">
                 <div class="col">
                     <ion-icon name="swap-horizontal"></ion-icon>
                     <strong>Transaction</strong>
@@ -847,12 +847,12 @@ include "config/homeConfig.php"
                     <strong>Withdraw</strong>
                 </div>
             </a>
-            <a href="klaim" class="item">
+            <!-- <a href="klaim" class="item">
                 <div class="col">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
                     <strong>Klaim</strong>
                 </div>
-            </a>
+            </a> -->
             <a href="deposit" class="item">
                 <div class="col">
                     <ion-icon name="arrow-up-circle-outline"></ion-icon>

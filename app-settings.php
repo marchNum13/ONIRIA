@@ -424,13 +424,13 @@ include "config/settingConfig.php"
                     <strong>Home</strong>
                 </div>
             </a>
-            <a href="paket" class="item">
+            <a href="package" class="item">
                 <div class="col">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
                     <strong>Package</strong>
                 </div>
             </a>
-            <a href="transaksi" class="item">
+            <a href="transaction" class="item">
                 <div class="col">
                     <ion-icon name="swap-horizontal"></ion-icon>
                     <strong>Transaction</strong>
