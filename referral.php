@@ -65,7 +65,7 @@ include "config/refferalConfig.php"
             <div class="card text-center">
                 <div class="card-body">
                     <h3 class="card-titlde mb-1">Refer a Friend</h3>
-                    <p>Kode Referral: <span class="badge badge-danger"><?= $_SESSION['user_ads'] ?></span></p>
+                    <p>Referral Code: <span class="badge badge-danger"><?= $_SESSION['user_ads'] ?></span></p>
                     <div class="row">
                         <div class="col">
                             <a href="#" class="btn btn-secondary" onclick="copyToClipboard()">

@@ -76,7 +76,7 @@ include "config/homeConfig.php"
                                             </a>
                                         </div>
                                         <div class="item">
-                                            <a href="paket">
+                                            <a href="package">
                                                 <div class="icon-wrapper bg-success">
                                                     <ion-icon name="gift-outline"></ion-icon>
                                                 </div>
@@ -280,13 +280,13 @@ include "config/homeConfig.php"
                 <div class="row mt-2">
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #2bcf3a, #19ca4b, #05c459, #00be65, #00b86e);">
-                            <div class="title text-white">Profit Basic</div>
+                            <div class="title text-white">Reward Basic</div>
                             <div class="value text-white" style="font-size: large;"><?= getSumProfitBasic() ?> Nexx</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #009ccc, #0097d2, #0092d8, #008cdd, #0085e0);">
-                            <div class="title text-white">Profit Premium</div>
+                            <div class="title text-white">Reward Premium</div>
                             <div class="value text-white" style="font-size: large;"><?= getSumProfit() ?> USDT</div>
                         </div>
                     </div>
@@ -294,13 +294,13 @@ include "config/homeConfig.php"
                 <div class="row mt-2">
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #581ae9, #0050e4, #0060c8, #00659f, #2f6578);">
-                            <div class="title text-white">Bonus Provider</div>
+                            <div class="title text-white">Reward Provider</div>
                             <div class="value text-white" style="font-size: large;"><?= getSumBonus() ?> USDT</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box" style="background-image: linear-gradient(to right top, #f28d0a, #f78028, #f9743a, #f8694a, #f46059);">
-                            <div class="title text-white">Bonus Matching</div>
+                            <div class="title text-white">Reward Matching</div>
                             <div class="value text-white" style="font-size: large;"><?= getSumBonusMatching() ?> USDT</div>
                         </div>
                     </div>

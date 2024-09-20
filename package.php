@@ -83,9 +83,9 @@ include "config/paketConfig.php"
                             <div class="action-sheet-content">
                                 <form method="post" action="">
                                     <input type="hidden" name="namePaket" value="<?= $row['settings_nama_paket'] ?>">                                
-                                    <h3><?= number_format($row['settings_harga_paket']) ?> USDT / 30 Hari</h3>
+                                    <h3><?= number_format($row['settings_harga_paket']) ?> USDT / 30 Day</h3>
                                     Free premium package subscription.<br>
-                                    <?= $row['settings_jumlah_tugas'] ?> Video Youtube
+                                    <?= $row['settings_jumlah_tugas'] ?> YouTube Video
                                     <script>
                                         function loadingForm() {
                                             // Mengatur tombol menjadi tidak dapat di-klik selama proses loading
@@ -142,8 +142,8 @@ include "config/paketConfig.php"
                                 <form method="post" action="">
                                     <input type="hidden" name="namePaket" value="<?= $row['settings_nama_paket'] ?>">                                
                                     <h3><?= number_format($row['settings_harga_paket']) ?> USDT</h3>
-                                    <?= $row['settings_jumlah_tugas'] ?> Video Youtube <br>
-                                    Sponsor <?= $lvlReff ?> Lvl <br>
+                                    <?= $row['settings_jumlah_tugas'] ?> YouTube Video <br>
+                                    Provider <?= $lvlReff ?> Lvl <br>
                                     Matching <?= $lvlMaching ?> Lvl
                                     <script>
                                         function loadingForm() {
