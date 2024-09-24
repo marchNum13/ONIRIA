@@ -2,9 +2,13 @@
 class connMySQLClass{
     // SET ATTRIBUTE CONFIG DB
     private $servername = "localhost"; // SERVER NAME
-    private $username = "u256627252_oni"; // USERNAME
-    private $password = "/L3vVa@1d"; // PASSWORD
-    private $dbname = "u256627252_oni"; // DATABASE NAME
+    // private $username = "u256627252_oni"; // USERNAME
+    // private $password = "/L3vVa@1d"; // PASSWORD
+    // private $dbname = "u256627252_oni"; // DATABASE NAME
+
+    private $username = "root"; // USERNAME
+    private $password = ""; // PASSWORD
+    private $dbname = "oni"; // DATABASE NAME
 
     // METHOD CONNECT TO DB
     protected function dbConn(){
