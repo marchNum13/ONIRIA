@@ -64,7 +64,7 @@ include "config/homeConfig.php"
                                                 <div class="icon-wrapper">
                                                     <ion-icon name="arrow-up-outline"></ion-icon>
                                                 </div>
-                                                <strong class="text-white">Deposit</strong>
+                                                <strong class="text-white">Deposite</strong>
                                             </a>
                                         </div>
                                         <div class="item">

@@ -61,7 +61,7 @@ class depositTableClass extends connMySQLClass{
     public function selectAllTr($start, $end, $user){
         $sql = "SELECT 
                 profit_nominal AS nominal, 
-                'profit basic' AS keterangan,
+                'reward basic' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_profit_user
@@ -75,7 +75,7 @@ class depositTableClass extends connMySQLClass{
 
             SELECT 
                 profit_nominal AS nominal, 
-                'profit premium' AS keterangan,
+                'reward premium' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(profit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_profit_user
@@ -89,7 +89,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 bonus_nominal AS nominal, 
-                'bonus provider' AS keterangan ,
+                'reward provider' AS keterangan ,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_bonus_user 
@@ -103,7 +103,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 bonus_nominal AS nominal, 
-                'bonus matching' AS keterangan ,
+                'reward matching' AS keterangan ,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(bonus_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date
             FROM 
                 trasaction_bonus_matching_user 
@@ -117,7 +117,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 paket_nominal AS nominal, 
-                'paket premium' AS keterangan,
+                'package premium' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date 
             FROM 
                 trasaction_paket_user 
@@ -131,7 +131,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 paket_nominal AS nominal, 
-                'paket membership' AS keterangan,
+                'package membership' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(paket_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date 
             FROM 
                 trasaction_paket_non_premium_user 
@@ -159,7 +159,7 @@ class depositTableClass extends connMySQLClass{
             
             SELECT 
                 deposit_nominal AS nominal, 
-                'deposit' AS keterangan,
+                'deposite' AS keterangan,
                 DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(deposit_date / 1000), '+00:00', '+08:00'), '%Y-%m-%d %H:%i') AS date 
             FROM 
                 trasaction_deposit_user 

@@ -61,8 +61,8 @@ include "config/transaksiConfig.php"
                     <div class="detail">
                         <div class="image-block imaged">
                         <?php  
-                        $plus = array('profit basic', 'profit premium', 'bonus provider', 'bonus matching', 'deposit');
-                        $minus = array('paket premium', 'paket membership', 'withdraw');
+                        $plus = array('reward basic', 'reward premium', 'reward provider', 'reward matching', 'deposite');
+                        $minus = array('package premium', 'package membership', 'withdraw');
                         $class = "";
                         $icon = "";
                         if(in_array($row['keterangan'], $plus)){
@@ -86,7 +86,7 @@ include "config/transaksiConfig.php"
                         </div>
                     </div>
                     <div class="right">
-                        <div class="price text-<?= $class ?>"><?= $icon ?><?= number_format($row['nominal'],2) ?> <?= $row['keterangan'] == "profit basic" ? "Nexx" : "USDT" ?></div>
+                        <div class="price text-<?= $class ?>"><?= $icon ?><?= number_format($row['nominal'],2) ?> <?= $row['keterangan'] == "reward basic" ? "Nexx" : "USDT" ?></div>
                     </div>
                 </a>
                 <!-- * item -->
