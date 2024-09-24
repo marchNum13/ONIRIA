@@ -23,7 +23,7 @@ if(isset($_GET['reff'])){
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['registrasi'])){
-        $recaptchaSecret = '6LfEie0pAAAAAOtcPwGBTO5cGnIaxp68WdXkzD6e';
+        $recaptchaSecret = '6LfaTkcqAAAAAFfZX0dVfSN0N0li1twZqptAh8lw';
         $recaptchaResponse = $_POST['g-recaptcha-response'];
 
         // Kirim request POST ke server Google

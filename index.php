@@ -91,11 +91,11 @@ include "config/loginConfig.php"
                     <div>
                         <a href="app-register">Register Now</a>
                     </div>
-                    <!-- <div><a href="forgot-password" class="text-muted">Forgot Password?</a></div> -->
+                     <div><a href="forgot-password" class="text-muted">Forgot Password?</a></div> 
                 </div>
 
                 <div class="mt-3">
-                    <div class="g-recaptcha" data-sitekey="6LfEie0pAAAAAF2QpQ_VH1uLyohZfiefSShLQvL2"></div>
+                    <div class="g-recaptcha" data-sitekey="6LfaTkcqAAAAAMQTFfHX0c-OfEJaOxEGjqQgt2t-"></div>
                 </div>
                 
                 <script>

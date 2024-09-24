@@ -107,7 +107,7 @@ include "config/regisConfig.php"
                 </div>
                 
                 <div class="mt-3">
-                    <div class="g-recaptcha" data-sitekey="6LfEie0pAAAAAF2QpQ_VH1uLyohZfiefSShLQvL2"></div>
+                    <div class="g-recaptcha" data-sitekey="6LfaTkcqAAAAAMQTFfHX0c-OfEJaOxEGjqQgt2t-"></div>
                 </div>
 
                 <script>

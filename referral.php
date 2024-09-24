@@ -23,7 +23,7 @@ include "config/refferalConfig.php"
     </style>
     <script>
         function copyToClipboard() {
-            var url = "https://adventureclick.site/app-register?reff=<?= $_SESSION['user_ads'] ?>";
+            var url = "https://oniria.click/app-register?reff=<?= $_SESSION['user_ads'] ?>";
             var dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
             dummy.value = url;

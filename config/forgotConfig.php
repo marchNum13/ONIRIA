@@ -19,7 +19,7 @@ $alert_success = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['reset'])){
-        $recaptchaSecret = '6LfEie0pAAAAAOtcPwGBTO5cGnIaxp68WdXkzD6e';
+        $recaptchaSecret = '6LfaTkcqAAAAAFfZX0dVfSN0N0li1twZqptAh8lw';
         $recaptchaResponse = $_POST['g-recaptcha-response'];
 
         // Kirim request POST ke server Google
@@ -78,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 function sendEmail($emailDestination, $codeOTP){
     $memberName = explode("@", $emailDestination)[0];
-    $url = "https://adventureclick.site/reset-password?email=" . $emailDestination . "&v=" . password_hash($codeOTP, PASSWORD_DEFAULT);
+    $url = "https://oniria.click/reset-password?email=" . $emailDestination . "&v=" . password_hash($codeOTP, PASSWORD_DEFAULT);
     $subject = 'Reset Password Account!';
     $message = '<html>
                     <body>
@@ -98,10 +98,10 @@ function sendEmail($emailDestination, $codeOTP){
     $mail->SMTPSecure = 'ssl';
     $mail->Port = 465;
 
-    $mail->Username = "admin@adventureclick.site";
-    $mail->Password = "Admin1@adventureclick.site";
+    $mail->Username = "admin@oniria.click";
+    $mail->Password = "4:uq;Qm1UdHR";
 
-    $mail->setFrom("admin@adventureclick.site", "AdVenture");
+    $mail->setFrom("admin@oniria.click", "Oniria");
     $mail->addAddress($emailDestination, $memberName);
     $mail->isHTML(true);
 
