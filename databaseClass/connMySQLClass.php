@@ -6,10 +6,6 @@ class connMySQLClass{
     private $password = "/L3vVa@1d"; // PASSWORD
     private $dbname = "u256627252_oni"; // DATABASE NAME
 
-    // private $username = "u351876156_idetaid_"; // USERNAME
-    // private $password = "/XW9yUR>8Pt#"; // PASSWORD
-    // private $dbname = "u351876156_print_app"; // DATABASE NAME
-
     // METHOD CONNECT TO DB
     protected function dbConn(){
         try{
