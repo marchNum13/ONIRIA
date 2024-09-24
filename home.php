@@ -458,8 +458,9 @@ include "config/homeConfig.php"
             </div>
             <!-- * Transactions -->
             <?php 
-            }else{ 
-                $array = array("uXlWYZ022zU", "LRJP140fv3E", "FzaS0V_FCrI", "S87tldWtXMc", "Y1P-UfaaVfo", "_oI_B0OBgVw", "XhP3Xh4LMA8", "QdBZY2fkU-0");
+            }else{  
+                // $array = array("uXlWYZ022zU", "LRJP140fv3E", "FzaS0V_FCrI", "S87tldWtXMc", "Y1P-UfaaVfo", "_oI_B0OBgVw", "XhP3Xh4LMA8", "QdBZY2fkU-0");
+                $array = array("7WzZBr8dGzk", "l5vXGGl8SI8");
 
                 $indeks_acak = array_rand($array);
 
@@ -468,7 +469,7 @@ include "config/homeConfig.php"
             <div class="section mt-2">
                 <form method="post" action="" class="card">
                     <div class="card-header">
-                        Klaim Profit
+                        Klaim Reward
                     </div>
                     <div class="card-body">
                         <input type="hidden" name="adsID" value="<?= $_GET['iklan'] ?>">
@@ -476,7 +477,7 @@ include "config/homeConfig.php"
         
                         <!-- YouTube Video Embed -->
                         <div class="video-wrapper">
-                            <iframe id="ytplayer" type="text/html" width="100%" height="360" src="https://www.youtube.com/embed/<?= $get_array ?>?enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" frameborder="0"></iframe>
+                            <iframe id="ytplayer" type="text/html" width="100%" height="360" src="https://www.youtube.com/embed/<?= $get_array ?>?enablejsapi=1&controls=0&rel=0&iv_load_policy=3&disablekb=1" frameborder="0"></iframe>
                         </div>
                         <script>
                             var player;
